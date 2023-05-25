@@ -29,16 +29,16 @@ public class Game {
         Dimension buttonSize = new Dimension(100, 50); // Set the size of the buttons
 
         JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Create a panel for the buttons
-        topButtons.add(createButton("Move", buttonSize, 100, 0)); // Add the buttons to the button panel
-        topButtons.add(createButton("Take Role", buttonSize, 100, 0));
+        topButtons.add(createButton("Move", buttonSize, 200, 0)); // Add the buttons to the button panel
+        topButtons.add(createButton("Take Role", buttonSize, 200, 0));
 
         JPanel middleButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         middleButtons.add(createButton("Rehearse", buttonSize, 10, 10));
         middleButtons.add(createButton("Act", buttonSize, 10, 10));
 
         JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 100)); // Add the buttons to the button panel
-        bottomButtons.add(createButton("End Turn", buttonSize, 0, 100));
+        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 200)); // Add the buttons to the button panel
+        bottomButtons.add(createButton("End Turn", buttonSize, 0, 200));
 
         buttonPanel.add(topButtons); // Add the button panel to the main panel
         buttonPanel.add(middleButtons);
