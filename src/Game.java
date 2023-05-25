@@ -96,6 +96,27 @@ public class Game {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+        selectPlayers();
+
+    }
+
+    private JLabel createLabel(String text, int fontSize, int spacing) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Serif", Font.BOLD, fontSize));
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0));
+        return label;
+    }
+
+    private JPanel createButton(String buttonName, Dimension buttonSize, int top, int bottom) {
+        JButton button = new JButton(buttonName);
+        button.setPreferredSize(buttonSize);
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(button);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
+        return buttonPanel;
+    }
+
+    private void selectPlayers() {
         // Player selection dialog
         Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // Number of players choices
         JComboBox<Integer> numPlayers = new JComboBox<>(choices); // Create a combo box for the number of players
@@ -116,22 +137,6 @@ public class Game {
             System.out.println("Game Setup Cancelled!");
             // exit
         }
-    }
-
-    private JLabel createLabel(String text, int fontSize, int spacing) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Serif", Font.BOLD, fontSize));
-        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0));
-        return label;
-    }
-
-    private JPanel createButton(String buttonName, Dimension buttonSize, int top, int bottom) {
-        JButton button = new JButton(buttonName);
-        button.setPreferredSize(buttonSize);
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(button);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
-        return buttonPanel;
     }
 }
 
