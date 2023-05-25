@@ -13,17 +13,13 @@ import java.net.URL;
 
 public class Game {
 
-    private JFrame frame;
-    private JPanel panel;
-    private JButton btn_move, btn_take_role, btn_rehearse, btn_act;
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
     }
 
     private void GUI() {
-        frame = new JFrame("Deadwood"); // Create and set up the window.
-        panel = new JPanel(); // Create a panel to hold all other components
+        JFrame frame = new JFrame("Deadwood"); // Create and set up the window.
+        JPanel panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
 
         JPanel buttonPanel = new JPanel(); // Create a separate panel for the buttons
@@ -32,15 +28,20 @@ public class Game {
 
         Dimension buttonSize = new Dimension(100, 50); // Set the size of the buttons
 
-        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Create a panel for the buttons
         topButtons.add(createButton("Move", buttonSize, 100, 0)); // Add the buttons to the button panel
         topButtons.add(createButton("Take Role", buttonSize, 100, 0));
 
-        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        bottomButtons.add(createButton("Rehearse", buttonSize, 0, 300));
-        bottomButtons.add(createButton("Act", buttonSize, 0, 300));
+        JPanel middleButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        middleButtons.add(createButton("Rehearse", buttonSize, 10, 10));
+        middleButtons.add(createButton("Act", buttonSize, 10, 10));
 
-        buttonPanel.add(topButtons);
+        JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 100)); // Add the buttons to the button panel
+        bottomButtons.add(createButton("End Turn", buttonSize, 0, 100));
+
+        buttonPanel.add(topButtons); // Add the button panel to the main panel
+        buttonPanel.add(middleButtons);
         buttonPanel.add(bottomButtons);
 
         JPanel statsPanel = new JPanel(); // Create a panel for player stats
@@ -69,22 +70,18 @@ public class Game {
         JLayeredPane layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
 
 
-        URL boardURL = getClass().getResource("/images/board.jpg");
-        ImageIcon board = new ImageIcon(boardURL); // Create the board image
+        ImageIcon board = getImage("/resources/images/board.jpg"); // Create the board image
         layeredPane.setPreferredSize(new Dimension(board.getIconWidth(), board.getIconHeight())); // Set the size of the game board
-        board.setImage(board.getImage().getScaledInstance(board.getIconWidth(), board.getIconHeight(), Image.SCALE_AREA_AVERAGING)); // Scale the board image to fit the board
         JLabel boardLabel = new JLabel(board); // Add the board image to a label
         boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight()); // Set the size of the board label
 
         // testing - dummy player icon
-        URL playerURL = getClass().getResource("/images/tokens/r1.png");
-        ImageIcon playerIcon = new ImageIcon(playerURL);
-        playerIcon.setImage(playerIcon.getImage().getScaledInstance(50, 50, Image.SCALE_DEFAULT));
+        ImageIcon playerIcon = getImage("/resources/images/tokens/r1.png");
         JLabel player = new JLabel(playerIcon);
         player.setBounds(0, 0, playerIcon.getIconWidth(), playerIcon.getIconHeight());
 
         // testing - layering
-        layeredPane.add(boardLabel, Integer.valueOf(1));
+        layeredPane.add(boardLabel, Integer.valueOf(0));
         layeredPane.add(player, Integer.valueOf(2));
 
 
@@ -137,6 +134,13 @@ public class Game {
             System.out.println("Game Setup Cancelled!");
             // exit
         }
+    }
+
+    private ImageIcon getImage(String path) {
+        URL url = getClass().getResource(path);
+        ImageIcon image = new ImageIcon(url);
+        image.setImage(image.getImage().getScaledInstance(image.getIconWidth(), image.getIconHeight(), Image.SCALE_DEFAULT));
+        return image;
     }
 }
 
