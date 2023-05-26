@@ -12,8 +12,8 @@ public class GameManager {
 
 
     // constructor
-    public GameManager() {
-
+    public GameManager(int numPlayers) {
+        setupGame(numPlayers);
     }
 
 

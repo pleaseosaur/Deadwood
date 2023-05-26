@@ -12,6 +12,7 @@ import java.awt.*;
 import java.net.URL;
 
 public class Game {
+    private GameManager manager;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
@@ -48,11 +49,11 @@ public class Game {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
 
-        JLabel playerName = createLabel("Player Name: ", 20, 10); // Create a label to display the player's name
-        JLabel playerRank = createLabel("Rank: ", 20, 10); // Create a label to display the player's rank
-        JLabel playerDollars = createLabel("Dollars: ", 20, 10); // Create a label to display the player's dollars
-        JLabel playerCredits = createLabel("Credits: ", 20, 10); // Create a label to display the player's credits
-        JLabel playerChips = createLabel("Practice Chips: ", 20, 10); // Create a label to display the player's chips
+        JLabel playerName = createLabel("Player Name: ", 20, 15); // Create a label to display the player's name
+        JLabel playerRank = createLabel("Rank: ", 15, 10); // Create a label to display the player's rank
+        JLabel playerDollars = createLabel("Dollars: ", 15, 10); // Create a label to display the player's dollars
+        JLabel playerCredits = createLabel("Credits: ", 15, 10); // Create a label to display the player's credits
+        JLabel playerChips = createLabel("Practice Chips: ", 15, 10); // Create a label to display the player's chips
 
         statsPanel.add(playerName); // Add the stats label to the stats panel
         statsPanel.add(playerRank);
@@ -89,11 +90,13 @@ public class Game {
         panel.add(rightPanel, BorderLayout.EAST); // Add the right panel to the panel
 
         frame.add(panel); // Add the panel to the frame
-        frame.setSize(1300, 1000); // Set the size of the frame
+        frame.setSize(1500, 1000); // Set the size of the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
         selectPlayers();
+
+        renamePlayers(manager);
 
     }
 
@@ -129,11 +132,31 @@ public class Game {
         if (option == 0) { // 'Start Game' selected
             Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
             System.out.println("Starting game with " + input + " players!");
-            // game logic
+            this.manager = new GameManager(input); // Create a new game manager with the selected number of players
         } else { // 'Cancel' selected or dialog closed
             System.out.println("Game Setup Cancelled!");
             // exit
         }
+    }
+
+    private void renamePlayers(GameManager manager) {
+        int renameOption = JOptionPane.showConfirmDialog(null, "Would you like to enter custom player names?", "Rename Players", JOptionPane.YES_NO_OPTION);
+        if(renameOption == JOptionPane.YES_OPTION) {
+            for(Player player : manager.getPlayers()) {
+                String name = renamePrompt(player.getName());
+                manager.renamePlayer(player, name);
+            }
+        }
+    }
+
+    private String renamePrompt(String name) {
+        JTextField input = new JTextField();
+        final JComponent[] inputs = new JComponent[] {
+                new JLabel("Please enter a name for " + name + ": "),
+                input
+        };
+        JOptionPane.showMessageDialog(null, inputs, "Rename Player", JOptionPane.PLAIN_MESSAGE);
+        return input.getText();
     }
 
     private ImageIcon getImage(String path) {

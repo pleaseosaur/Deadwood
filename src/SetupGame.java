@@ -10,8 +10,8 @@ public class SetupGame {
     public SetupGame(int numPlayers) {
         // Exception catch
         try{
-            GameData.initializeGameData(getClass().getResourceAsStream("xml/board.xml"),
-                                        getClass().getResourceAsStream("xml/cards.xml"));
+            GameData.initializeGameData(getClass().getResourceAsStream("/resources/xml/board.xml"),
+                                        getClass().getResourceAsStream("/resources/xml/cards.xml"));
             setPlayers(numPlayers);
             setDays(numPlayers);
         }

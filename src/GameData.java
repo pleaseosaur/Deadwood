@@ -133,7 +133,7 @@ public class GameData {
         String cardName = cardElement.getAttribute("name"); // get card name
         Element sceneNode = (Element) cardElement.getElementsByTagName("scene").item(0); // get scene node
         int sceneNumber = Integer.parseInt(sceneNode.getAttribute("number")); //get scene number
-        String image = cardElement.getAttribute("img"); // get card image
+        String image = "/resources/images/cards/" + cardElement.getAttribute("img"); // get card image path
         int budget = Integer.parseInt(cardElement.getAttribute("budget")); // get card budget
         String sceneDescription = cardElement.getElementsByTagName("scene").item(0).getTextContent(); // get scene description
         List<Role> roles = createRoles(cardElement.getElementsByTagName("part"), true); // get part/role nodes
