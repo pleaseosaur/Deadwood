@@ -1,7 +1,6 @@
 // imports
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 public class SetupGame {
@@ -21,9 +20,27 @@ public class SetupGame {
         }
     }
 
+    public Map<String, Map<Integer, String>> setTokens() {
+        Map<String, Map<Integer, String>> tokens = new HashMap<>();
+        List<String> colors = Arrays.asList("b", "c", "g", "o", "p", "r", "v", "w", "y");
+        String prefix = "/resources/images/tokens/";
+
+        for(String color : colors) {
+            Map<Integer, String> token = new HashMap<>();
+            for(int rank = 1; rank <= 6; rank++) {
+                String path = prefix + color + rank + ".png";
+                token.put(rank, path);
+            }
+            tokens.put(color, token);
+        }
+
+        return tokens;
+    }
+
     // getters and setters
     public List<Player> setPlayers(int numPlayers) {
 
+        String[] colors = {"b", "c", "g", "o", "p", "r", "v", "w", "y"};
         List<Player> players = new ArrayList<>();
 
         int rank = 1;
@@ -39,7 +56,7 @@ public class SetupGame {
         }
 
         for(int i = 1; i <= numPlayers; i++) {
-            Player player = new Player("Player " + i, rank, credits, dollars);
+            Player player = new Player("Player " + i, rank, credits, dollars, colors[i-1]);
             players.add(player);
         }
 

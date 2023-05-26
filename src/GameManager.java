@@ -5,6 +5,7 @@ import java.util.*;
 public class GameManager {
     // fields
     private List<Player> players;
+    private Map<String, Map<Integer, String>> tokens;
     private Player currentPlayer;
     private int days;
     private Board board;
@@ -25,6 +26,7 @@ public class GameManager {
         setCurrentPlayer();
         this.board = Board.getInstance();
         this.dice = new Dice(6);
+        this.tokens = setup.setTokens();
         resetPlayers();
     }
 

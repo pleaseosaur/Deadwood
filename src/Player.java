@@ -1,6 +1,7 @@
 public class Player {
     // fields
     private String name;
+    private String color;
     private int rank;
     private int credits;
     private int dollars;
@@ -15,11 +16,12 @@ public class Player {
 
 
     // constructor
-    public Player(String name, int rank, int credits, int dollars){
+    public Player(String name, int rank, int credits, int dollars, String color){
         setName(name);
         setRank(rank);
         setCredits(credits);
         setDollars(dollars);
+        this.color = color;
         setRole();
         resetPracticeChips();
         setHasMoved(false);

@@ -77,13 +77,13 @@ public class Game {
         boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight()); // Set the size of the board label
 
         // testing - dummy player icon
-        ImageIcon playerIcon = getImage("/resources/images/tokens/r1.png");
-        JLabel player = new JLabel(playerIcon);
-        player.setBounds(0, 0, playerIcon.getIconWidth(), playerIcon.getIconHeight());
+//        ImageIcon playerIcon = getImage("/resources/images/tokens/r1.png");
+//        JLabel player = new JLabel(playerIcon);
+//        player.setBounds(0, 0, playerIcon.getIconWidth(), playerIcon.getIconHeight());
 
         // testing - layering
         layeredPane.add(boardLabel, Integer.valueOf(0));
-        layeredPane.add(player, Integer.valueOf(2));
+//        layeredPane.add(player, Integer.valueOf(2));
 
 
         panel.add(layeredPane, BorderLayout.CENTER); // Add the layered pane to the panel
