@@ -33,6 +33,10 @@ public class Card {
         return roles;
     }
 
+    public String getImg() {
+        return img;
+    }
+
     public boolean isWrapped(){
         return wrap;
     }

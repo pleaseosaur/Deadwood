@@ -98,6 +98,14 @@ public class Game {
 
         renamePlayers(manager);
 
+        displayCards();
+
+    }
+
+    private void displayCards() {
+        for(Card card : manager.getCards()) {
+            getImage(card.getImg());
+        }
     }
 
     private JLabel createLabel(String text, int fontSize, int spacing) {

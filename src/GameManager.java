@@ -1,6 +1,7 @@
 // imports
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GameManager {
     // fields
@@ -395,5 +396,18 @@ public class GameManager {
     // calls displayBoard method in Board class
     public void displayBoard() {
         board.displayBoard();
+    }
+
+    public List<Card> getCards() {
+        Collection<Location> locations = board.getAllLocations().values();
+        List<Card> cards = new ArrayList<>();
+
+        for(Location location : locations) {
+            if(location instanceof Set set) {
+                cards.add(set.getScene());
+            }
+        }
+
+        return cards;
     }
 }
