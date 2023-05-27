@@ -13,13 +13,14 @@ import java.net.URL;
 
 public class Game {
     private GameManager manager;
+    private JFrame frame;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
     }
 
     private void GUI() {
-        JFrame frame = new JFrame("Deadwood"); // Create and set up the window.
+        frame = new JFrame("Deadwood"); // Create and set up the window.
         JPanel panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
 
@@ -98,18 +99,8 @@ public class Game {
 
         renamePlayers(manager);
 
-        displayCards();
-
-        //setup game
-        Deadwood game = new Deadwood(manager);
-        game.startGame();
     }
 
-    private void displayCards() {
-        for(Card card : manager.getCards()) {
-            getImage(card.getImg());
-        }
-    }
 
     private JLabel createLabel(String text, int fontSize, int spacing) {
         JLabel label = new JLabel(text);
