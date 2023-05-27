@@ -2,6 +2,7 @@ public class Take {
     // fields
     private int number;
     private Area area;
+    private String img = "/resources/images/shot.png";
 
     // constructor
     public Take(int n, Area a){
@@ -24,5 +25,9 @@ public class Take {
 
     public Area getArea(){
         return this.area;
+    }
+
+    public String getImg() {
+        return img;
     }
 }

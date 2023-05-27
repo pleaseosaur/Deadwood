@@ -415,4 +415,24 @@ public class GameManager {
 
         return cards;
     }
+
+    public Map<Take, List<Integer>> getTakes() {
+        Collection<Location> locations = board.getAllLocations().values();
+        Map<Take, List<Integer>> takes = new HashMap<>();
+
+        for(Location location : locations) {
+            if(location instanceof Set set) {
+                for(Take take : set.getTakes()) {
+                    Area area = take.getArea();
+                    int x = area.getX();
+                    int y = area.getY();
+                    int w = area.getW();
+                    int h = area.getH();
+                    takes.put(take, List.of(x, y, w, h));
+                }
+            }
+        }
+
+        return takes;
+    }
 }

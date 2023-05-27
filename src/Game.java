@@ -114,6 +114,17 @@ public class Game {
             layeredPane.add(cardLabel, Integer.valueOf(1));
         });
 
+        manager.getTakes().forEach((key, value) -> {
+            String path = key.getImg();
+            int x = value.get(0);
+            int y = value.get(1);
+            int w = value.get(2);
+            int h = value.get(3);
+            ImageIcon take = getImage(path);
+            JLabel takeLabel = new JLabel(take);
+            takeLabel.setBounds(x, y, w, h);
+            layeredPane.add(takeLabel, Integer.valueOf(1));
+        });
     }
 
 
