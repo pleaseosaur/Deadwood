@@ -398,13 +398,18 @@ public class GameManager {
         board.displayBoard();
     }
 
-    public List<Card> getCards() {
+    public Map<Card, List<Integer>> getCards() {
         Collection<Location> locations = board.getAllLocations().values();
-        List<Card> cards = new ArrayList<>();
+        Map<Card, List<Integer>> cards = new HashMap<>();
 
         for(Location location : locations) {
             if(location instanceof Set set) {
-                cards.add(set.getScene());
+                Area area = set.getArea();
+                int x = area.getX();
+                int y = area.getY();
+                int w = area.getW();
+                int h = area.getH();
+                cards.put(set.getScene(), List.of(x, y, w, h));
             }
         }
 

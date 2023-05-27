@@ -10,10 +10,13 @@
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
+import java.util.Map;
 
 public class Game {
     private GameManager manager;
     private JFrame frame;
+    private JPanel panel;
+    private JLayeredPane layeredPane;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
@@ -21,7 +24,7 @@ public class Game {
 
     private void GUI() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
-        JPanel panel = new JPanel(); // Create a panel to hold all other components
+        panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
 
         JPanel buttonPanel = new JPanel(); // Create a separate panel for the buttons
@@ -69,7 +72,7 @@ public class Game {
         rightPanel.add(buttonPanel, BorderLayout.CENTER);
 
 
-        JLayeredPane layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
+        layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
 
 
         ImageIcon board = getImage("/resources/images/board.jpg"); // Create the board image
@@ -98,6 +101,18 @@ public class Game {
         selectPlayers();
 
         renamePlayers(manager);
+
+        manager.getCards().forEach((key, value) -> {
+            String path = key.getImg();
+            int x = value.get(0);
+            int y = value.get(1);
+            int w = value.get(2);
+            int h = value.get(3);
+            ImageIcon card = getImage(path);
+            JLabel cardLabel = new JLabel(card);
+            cardLabel.setBounds(x, y, w, h);
+            layeredPane.add(cardLabel, Integer.valueOf(1));
+        });
 
     }
 
