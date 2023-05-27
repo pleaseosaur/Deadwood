@@ -42,6 +42,8 @@ public class Card {
     }
     public void setWrap(boolean w){
         this.wrap = w;
-        this.img = "/resources/images/cards/CardBack.jpg";
+        if(w){
+            this.img = "/resources/images/cards/CardBack.jpg";
+        }
     }
 }
