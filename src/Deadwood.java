@@ -17,12 +17,12 @@ public class Deadwood {
     // startGame: queries for player count, calls GameManager to set up accordingly, then starts game
     public void startGame() {
         ui.displayWelcomeMessage();
-        int players = ui.getPlayerCount();
-        manager.setupGame(players);
+        // int players = ui.getPlayerCount();
+        // manager.setupGame(players);
         setGameActive(true);
-        if(ui.promptRename()){
-            renamePlayers();
-        }
+        // if(ui.promptRename()){
+        //     renamePlayers();
+        // }
         runGame();
     }
 

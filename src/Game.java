@@ -100,6 +100,9 @@ public class Game {
 
         displayCards();
 
+        //setup game
+        Deadwood game = new Deadwood(manager);
+        game.startGame();
     }
 
     private void displayCards() {
