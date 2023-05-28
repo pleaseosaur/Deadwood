@@ -108,35 +108,48 @@ public class Game {
         renamePlayers(manager);
 
         currentPlayerInfo();
+        // TODO - refactor to allow single card images to be replaced and redisplayed
+        showCards();
 
-        manager.getCards().forEach((key, value) -> {
-            String path = key.getImg();
-            int x = value.get(0);
-            int y = value.get(1);
-            int w = value.get(2);
-            int h = value.get(3);
-            ImageIcon card = getImage(path);
-            JLabel cardLabel = new JLabel(card);
+        showTakes();
+
+        showTokens();
+
+
+    }
+
+    private void showCards() {
+        manager.getCards().forEach((card, area) -> {
+            String path = card.getImg();
+            int x = area.get(0);
+            int y = area.get(1);
+            int w = area.get(2);
+            int h = area.get(3);
+            ImageIcon cardImage = getImage(path);
+            JLabel cardLabel = new JLabel(cardImage);
             cardLabel.setBounds(x, y, w, h);
             layeredPane.add(cardLabel, Integer.valueOf(1));
         });
+    }
 
-        manager.getTakes().forEach((key, value) -> {
-            String path = key.getImg();
-            int x = value.get(0);
-            int y = value.get(1);
-            int w = value.get(2);
-            int h = value.get(3);
-            ImageIcon take = getImage(path);
-            JLabel takeLabel = new JLabel(take);
+    private void showTakes() {
+        manager.getTakes().forEach((take, area) -> {
+            String path = take.getImg();
+            int x = area.get(0);
+            int y = area.get(1);
+            int w = area.get(2);
+            int h = area.get(3);
+            ImageIcon takeImage = getImage(path);
+            JLabel takeLabel = new JLabel(takeImage);
             takeLabel.setBounds(x, y, w, h);
             layeredPane.add(takeLabel, Integer.valueOf(1));
         });
+    }
 
-        manager.getTokens().forEach((key, value) -> {
-            String path = key;
-            int x = value[0];
-            int y = value[1];
+    private void showTokens() {
+        manager.getTokens().forEach((path, position) -> {
+            int x = position[0];
+            int y = position[1];
             ImageIcon token = getImage(path);
             JLabel tokenLabel = new JLabel(token);
             tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight());
