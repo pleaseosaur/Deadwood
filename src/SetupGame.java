@@ -56,11 +56,14 @@ public class SetupGame {
         }
 
         int startingX = 991 + 10 - 45;
-        int startingY = 248 + 10;
+        int startingY = 248 + 80;
 
         for(int i = 1; i <= numPlayers; i++) {
-            // TODO add logic for dynamic player placement
             startingX += 45;
+            if(i > 4) {
+                startingX = 991 + 10 + 45*(i-5);
+                startingY = 248 + 80 + 45;
+            }
             Player player = new Player("Player " + i, rank, credits, dollars, colors[i-1], startingX, startingY);
             players.add(player);
         }
