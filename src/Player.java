@@ -155,4 +155,8 @@ public class Player {
         int[] position = {playerX, playerY};
         return position;
     }
+
+    public String getColor() {
+        return color;
+    }
 }
