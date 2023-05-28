@@ -436,14 +436,17 @@ public class GameManager {
         return takes;
     }
 
-    public Map<Player, Map<String, List<Integer>>> getTokens() {
-        
-        Map<Player, Map<String, List<Integer>>> tokens = new HashMap<>();
+    public Map<Player, Map<String, int[]>> getTokens() {
+//        var tokens = this.tokens;
+        Map<Player, Map<String, int[]>> playerTokens = new HashMap<>();
+        Map<String, int[]> pathmap = new HashMap<>();
 
         for(Player player : players) {
-            //build player
+            int[] position = player.getPosition();
+            pathmap.put(tokens.get(player.getColor()).get(player.getRank()), position);
+            playerTokens.put(player, pathmap);
         }
 
-        return tokens;
+        return playerTokens;
     }
 }
