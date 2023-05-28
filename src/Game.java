@@ -126,7 +126,15 @@ public class Game {
             layeredPane.add(takeLabel, Integer.valueOf(1));
         });
 
-        manager.
+        manager.getTokens().forEach((key, value) -> {
+            String path = key;
+            int x = value[0];
+            int y = value[1];
+            ImageIcon token = getImage(path);
+            JLabel tokenLabel = new JLabel(token);
+            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight());
+            layeredPane.add(tokenLabel, Integer.valueOf(2));
+        });
     }
 
 

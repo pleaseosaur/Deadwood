@@ -1,7 +1,6 @@
 // imports
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameManager {
     // fields
@@ -436,17 +435,17 @@ public class GameManager {
         return takes;
     }
 
-    public Map<Player, Map<String, int[]>> getTokens() {
+    public Map<String, int[]> getTokens() {
 //        var tokens = this.tokens;
-        Map<Player, Map<String, int[]>> playerTokens = new HashMap<>();
+//        Map<Player, Map<String, int[]>> playerTokens = new HashMap<>();
         Map<String, int[]> pathmap = new HashMap<>();
 
         for(Player player : players) {
             int[] position = player.getPosition();
             pathmap.put(tokens.get(player.getColor()).get(player.getRank()), position);
-            playerTokens.put(player, pathmap);
+//            playerTokens.put(player, pathmap);
         }
 
-        return playerTokens;
+        return pathmap;
     }
 }
