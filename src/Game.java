@@ -17,6 +17,11 @@ public class Game {
     private JFrame frame;
     private JPanel panel;
     private JLayeredPane layeredPane;
+    private JLabel playerName;
+    private JLabel playerRank;
+    private JLabel playerDollars;
+    private JLabel playerCredits;
+    private JLabel playerChips;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
@@ -53,11 +58,11 @@ public class Game {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
 
-        JLabel playerName = createLabel("Player Name: ", 20, 15); // Create a label to display the player's name
-        JLabel playerRank = createLabel("Rank: ", 15, 10); // Create a label to display the player's rank
-        JLabel playerDollars = createLabel("Dollars: ", 15, 10); // Create a label to display the player's dollars
-        JLabel playerCredits = createLabel("Credits: ", 15, 10); // Create a label to display the player's credits
-        JLabel playerChips = createLabel("Practice Chips: ", 15, 10); // Create a label to display the player's chips
+        playerName = createLabel("", 20, 15); // Create a label to display the player's name
+        playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
+        playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
+        playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
+        playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
 
         statsPanel.add(playerName); // Add the stats label to the stats panel
         statsPanel.add(playerRank);
@@ -102,6 +107,8 @@ public class Game {
 
         renamePlayers(manager);
 
+        currentPlayerInfo();
+
         manager.getCards().forEach((key, value) -> {
             String path = key.getImg();
             int x = value.get(0);
@@ -135,6 +142,15 @@ public class Game {
             tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight());
             layeredPane.add(tokenLabel, Integer.valueOf(2));
         });
+    }
+
+    private void currentPlayerInfo() {
+        Player currentPlayer = manager.getCurrentPlayer();
+        playerName.setText("Current Player: " + currentPlayer.getName());
+        playerRank.setText("Rank: " + currentPlayer.getRank());
+        playerDollars.setText("Dollars: " + currentPlayer.getDollars());
+        playerCredits.setText("Credits: " + currentPlayer.getCredits());
+        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips());
     }
 
 
