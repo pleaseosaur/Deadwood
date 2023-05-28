@@ -11,9 +11,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
-import java.util.Map;
-
-import static javax.swing.text.StyleConstants.setForeground;
 
 public class Game {
     private GameManager manager;
@@ -29,6 +26,22 @@ public class Game {
 
 
     private void GUI() {
+        // initialize frame, pane, and panels
+        startDay();
+
+        // these should only be used once at the start of the game
+        selectPlayers(); // select number of players and start game
+        renamePlayers(); // option to rename players
+
+        currentPlayerInfo(); // display current player stats
+
+        showCards(); // display cards on board
+        showTakes(); // display shot counters on board
+        showTokens(); // display player tokens on board
+    }
+
+
+    private void startDay() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
         panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
@@ -49,24 +62,6 @@ public class Game {
         frame.setSize(1500, 1000); // Set the size of the frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit program when the frame is closed
         frame.setVisible(true); // Make the frame visible
-
-        // set number of players and start game
-        selectPlayers();
-
-        // option to rename players
-        renamePlayers();
-
-        // display current player stats
-        currentPlayerInfo();
-
-        // display cards on board
-        showCards();
-
-        // display shot counters on board
-        showTakes();
-
-        // display player tokens on board
-        showTokens();
     }
 
 
@@ -80,6 +75,7 @@ public class Game {
         JPanel middleButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
+        // create action listeners for each button
         ActionListener moveListener = e -> {
             manager.move("location"); // TODO - move logic
             currentPlayerInfo();
@@ -101,8 +97,8 @@ public class Game {
         };
 
         ActionListener upgradeListener = e -> {
-            Area area = new Area(0, 0, 0, 0); // dummy area
-            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade
+            Area area = new Area(0, 0, 0, 0); // dummy area - remove
+            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
             manager.upgrade(upgrade, "$"); // TODO - upgrade logic
             currentPlayerInfo();
         };
@@ -113,16 +109,17 @@ public class Game {
         };
 
 
-        topButtons.add(createButton("Move", buttonSize, 200, 0, moveListener)); // Add the buttons to the button panel
-        topButtons.add(createButton("Take Role", buttonSize, 200, 0, takeRoleListener));
+        // create buttons and add to respective panels
+        topButtons.add(createButton("Move", buttonSize, 100, 0, moveListener));
+        topButtons.add(createButton("Take Role", buttonSize, 100, 0, takeRoleListener));
 
         middleButtons.add(createButton("Rehearse", buttonSize, 10, 10, rehearseListener));
         middleButtons.add(createButton("Act", buttonSize, 10, 10, actListener));
 
-        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 200, upgradeListener)); // Add the buttons to the button panel
+        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 200, upgradeListener));
         bottomButtons.add(createButton("End Turn", buttonSize, 0, 200, endTurnListener));
 
-        buttonPanel.add(topButtons); // Add the button panel to the main panel
+        buttonPanel.add(topButtons); // Add the button panels to the main panel
         buttonPanel.add(middleButtons);
         buttonPanel.add(bottomButtons);
     }
@@ -133,7 +130,7 @@ public class Game {
         statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
 
-        playerName = createLabel("", 25, 15); // Create a label to display the player's name
+        playerName = createLabel("", 35, 15); // Create a label to display the player's name
         playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
         playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
         playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits

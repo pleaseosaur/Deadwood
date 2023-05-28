@@ -40,7 +40,7 @@ public class SetupGame {
     // getters and setters
     public List<Player> setPlayers(int numPlayers) {
 
-        String[] colors = {"b", "c", "g", "o", "p", "r", "v", "w", "y"};
+        String[] colors = {"b", "c", "g", "o", "p", "r", "v", "y", "w"};
         List<Player> players = new ArrayList<>();
 
         int rank = 1;
