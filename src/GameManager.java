@@ -435,4 +435,15 @@ public class GameManager {
 
         return takes;
     }
+
+    public Map<Player, Map<String, List<Integer>>> getTokens() {
+        
+        Map<Player, Map<String, List<Integer>>> tokens = new HashMap<>();
+
+        for(Player player : players) {
+            //build player
+        }
+
+        return tokens;
+    }
 }

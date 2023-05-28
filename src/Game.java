@@ -125,6 +125,8 @@ public class Game {
             takeLabel.setBounds(x, y, w, h);
             layeredPane.add(takeLabel, Integer.valueOf(1));
         });
+
+        manager.
     }
 
 

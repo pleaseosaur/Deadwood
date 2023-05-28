@@ -55,8 +55,13 @@ public class SetupGame {
             rank = 2;
         }
 
+        int startingX = 991 + 10;
+        int startingY = 248 - 10;
+
         for(int i = 1; i <= numPlayers; i++) {
-            Player player = new Player("Player " + i, rank, credits, dollars, colors[i-1]);
+            startingX += 45;
+            startingY -= 45;
+            Player player = new Player("Player " + i, rank, credits, dollars, colors[i-1], startingX, startingY);
             players.add(player);
         }
 

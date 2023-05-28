@@ -13,10 +13,12 @@ public class Player {
     private boolean hasActed;
     private boolean hasRehearsed;
     private boolean hasTakenRole;
+    private int playerX;
+    private int playerY;
 
 
     // constructor
-    public Player(String name, int rank, int credits, int dollars, String color){
+    public Player(String name, int rank, int credits, int dollars, String color, int playerX, int playerY){
         setName(name);
         setRank(rank);
         setCredits(credits);
@@ -29,6 +31,7 @@ public class Player {
         setHasActed(false);
         setHasRehearsed(false);
         setHasTakenRole(false);
+        setPosition(playerX, playerY);
     }
 
 
@@ -141,5 +144,15 @@ public class Player {
     }
     public boolean getHasTakenRole() {
         return hasTakenRole;
+    }
+
+    public void setPosition(int x, int y) {
+        this.playerX = x;
+        this.playerY = y;
+    }
+
+    public int[] getPosition() {
+        int[] position = {playerX, playerY};
+        return position;
     }
 }
