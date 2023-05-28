@@ -55,12 +55,12 @@ public class SetupGame {
             rank = 2;
         }
 
-        int startingX = 991 + 10;
-        int startingY = 248 - 10;
+        int startingX = 991 + 10 - 45;
+        int startingY = 248 + 10;
 
         for(int i = 1; i <= numPlayers; i++) {
+            // TODO add logic for dynamic player placement
             startingX += 45;
-            startingY -= 45;
             Player player = new Player("Player " + i, rank, credits, dollars, colors[i-1], startingX, startingY);
             players.add(player);
         }
