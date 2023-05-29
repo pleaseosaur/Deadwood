@@ -68,13 +68,18 @@ public class GameManager {
                 if(role.getName().equals(r)) {
                     int x = role.getArea().getX();
                     int y = role.getArea().getY();
+
+                    if(onCardRoles.contains(role)) {
+                        x += set.getArea().getX();
+                        y += set.getArea().getY();
+                    }
+
                     currentPlayer.setPosition(x, y);
                     currentPlayer.setRole(role);
                     currentPlayer.setHasTakenRole(true);
                     role.setTaken(true);
                 }
             }
-
         }
     }
 

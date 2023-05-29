@@ -142,7 +142,7 @@ public class Game {
             JPopupMenu roleMenu = new JPopupMenu(); // create popup menu
             for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) { // add each role to the menu
                 JMenuItem roleItem = new JMenuItem(role.getKey() + role.getValue());
-                roleItem.addActionListener(a -> {
+                roleItem.addActionListener(a -> { // add action listener to each role
                     manager.takeRole(role.getKey()); // take the selected role
                     showTokens(); // update player tokens
                     currentPlayerInfo(); // update player stats
