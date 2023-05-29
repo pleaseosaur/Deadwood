@@ -329,6 +329,41 @@ public class GameManager {
         return winners;
     }
 
+    public List<String> getAvailableActions() {
+
+        List<String> availableActions = new ArrayList<>();
+        Map<String, String> availableRoles = getAvailableRoles();
+        Location currentLocation = currentPlayer.getLocation();
+
+        if(currentPlayer.getRole() == null) {
+            if(!currentPlayer.getHasMoved()) {
+                availableActions.add("Move");
+            }
+            if(currentLocation instanceof Set) {
+                if(!((Set) currentLocation).getScene().isWrapped() && !availableRoles.isEmpty()) { //TODO - may need to add additional check for hasTakenRole
+                    availableActions.add("Take Role");
+                }
+            }
+        }
+
+        if(currentPlayer.getRole() != null) {
+            if(!currentPlayer.getHasActed()) {
+                availableActions.add("Act");
+                if(currentPlayer.getRole().isOnCard() && !currentPlayer.getHasRehearsed()) {
+                    availableActions.add("Rehearse");
+                }
+            }
+        }
+
+        if(currentLocation instanceof CastingOffice) {
+            availableActions.add("Upgrade");
+        }
+
+        availableActions.add("End Turn");
+
+        return availableActions;
+    }
+
     // getAvailableRoles: makes list of roles available for taking
     public Map<String, String> getAvailableRoles() {
 
@@ -339,27 +374,24 @@ public class GameManager {
         if(playerLocation.isSet()){ // if player is on a set
             Set set = (Set) playerLocation; // cast player location to set
 
-            if(set.getScene().isWrapped()){ // if scene is wrapped, no roles are available
-                availableRoles.put("0", "model.Scene is wrapped. No roles are available.");
-            }
+            if(!set.getScene().isWrapped()) {
+                List<Role> offCardRoles = set.getRoles(); // get off card roles
+                List<Role> onCardRoles = set.getScene().getRoles(); // get on card roles
 
-            else { // if scene is not wrapped, add available roles to map
-                List<Role> offCardRoles = set.getRoles();
-                List<Role> onCardRoles = set.getScene().getRoles();
+                int rank = currentPlayer.getRank();
 
-                for(Role role : offCardRoles) { // add off card roles to map
-                    if(!role.isTaken()){ // if role is not taken
-                        availableRoles.put(role.getName(), " (rank " + role.getRank() + " - off card)"); // add role to map
+                for(Role role : offCardRoles) {
+                    if(!role.isTaken() && role.getRank() <= rank) {
+                        availableRoles.put(role.getName(), "(Off-Card) Rank: " + role.getRank());
                     }
                 }
 
-                for(Role role : onCardRoles) { // add on card roles to map
-                    if(!role.isTaken()){ // if role is not taken
-                        availableRoles.put(role.getName(), " (rank " + role.getRank() + " - on card)"); // add role to map
+                for(Role role : onCardRoles) {
+                    if(!role.isTaken() && role.getRank() <= rank) {
+                        availableRoles.put(role.getName(), "(On-Card) Rank: " + role.getRank());
                     }
                 }
             }
-
         }
         return availableRoles;
     }
@@ -436,14 +468,11 @@ public class GameManager {
     }
 
     public Map<String, int[]> getTokens() {
-//        var tokens = this.tokens;
-//        Map<Player, Map<String, int[]>> playerTokens = new HashMap<>();
         Map<String, int[]> pathmap = new HashMap<>();
 
         for(Player player : players) {
             int[] position = player.getPosition();
             pathmap.put(tokens.get(player.getColor()).get(player.getRank()), position);
-//            playerTokens.put(player, pathmap);
         }
 
         return pathmap;

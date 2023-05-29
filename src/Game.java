@@ -15,7 +15,7 @@ import java.net.URL;
 public class Game {
     private GameManager manager;
     private JFrame frame;
-    private JPanel panel, buttonPanel, statsPanel;
+    private JPanel panel, buttonPanel, statsPanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
     private JLayeredPane layeredPane;
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips;
 
@@ -110,14 +110,20 @@ public class Game {
 
 
         // create buttons and add to respective panels
-        topButtons.add(createButton("Move", buttonSize, 100, 0, moveListener));
-        topButtons.add(createButton("Take Role", buttonSize, 100, 0, takeRoleListener));
+        this.btn_move  = createButton("Move", buttonSize, 100, 0, moveListener);
+        this.btn_role  = createButton("Take Role", buttonSize, 100, 0, takeRoleListener);
+        topButtons.add(btn_move);
+        topButtons.add(btn_role);
 
-        middleButtons.add(createButton("Rehearse", buttonSize, 10, 10, rehearseListener));
-        middleButtons.add(createButton("Act", buttonSize, 10, 10, actListener));
+        this.btn_rehearse = createButton("Rehearse", buttonSize, 10, 10, rehearseListener);
+        this.btn_act = createButton("Act", buttonSize, 10, 10, actListener);
+        middleButtons.add(btn_rehearse);
+        middleButtons.add(btn_act);
 
-        bottomButtons.add(createButton("Upgrade", buttonSize, 0, 200, upgradeListener));
-        bottomButtons.add(createButton("End Turn", buttonSize, 0, 200, endTurnListener));
+        this.btn_upgrade = createButton("Upgrade", buttonSize, 0, 200, upgradeListener);
+        this.btn_end = createButton("End Turn", buttonSize, 0, 200, endTurnListener);
+        bottomButtons.add(btn_upgrade);
+        bottomButtons.add(btn_end);
 
         buttonPanel.add(topButtons); // Add the button panels to the main panel
         buttonPanel.add(middleButtons);
@@ -231,6 +237,8 @@ public class Game {
         playerDollars.setText("Dollars: " + currentPlayer.getDollars());
         playerCredits.setText("Credits: " + currentPlayer.getCredits());
         playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips());
+
+        showActiveButtons();
     }
 
 
@@ -250,6 +258,29 @@ public class Game {
         buttonPanel.add(button);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
         return buttonPanel;
+    }
+
+    private void showActiveButtons() {
+        var availableActions = manager.getAvailableActions();
+
+        setButtonStyle(btn_move, availableActions.contains("Move"));
+        setButtonStyle(btn_role, availableActions.contains("Take Role"));
+        setButtonStyle(btn_rehearse, availableActions.contains("Rehearse"));
+        setButtonStyle(btn_act, availableActions.contains("Act"));
+        setButtonStyle(btn_upgrade, availableActions.contains("Upgrade"));
+        setButtonStyle(btn_end, availableActions.contains("End Turn"));
+    }
+
+    private void setButtonStyle(JPanel button, boolean enabled) {
+        button.setEnabled(enabled);
+        for(Component c : button.getComponents()) {
+            c.setEnabled(enabled);
+            if(c instanceof JLabel label) {
+                label.setForeground(enabled ? Color.BLACK : Color.GRAY);
+            } else if(c instanceof JButton btn) {
+                btn.setForeground(enabled ? Color.BLACK : Color.GRAY);
+            }
+        }
     }
 
 
