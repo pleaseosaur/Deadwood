@@ -33,12 +33,9 @@ public class Set extends Location {
 
     // decrementTakes: decrements the current take and wraps the scene if necessary
     public void decrementTakes() {
-        int currentIndex = getCurrentTakeIndex();
-        int nextIndex = (currentIndex + 1) % this.takes.size();
-
-        boolean wrap = (currentIndex == takes.size() - 1);
-
-        currentTake = takes.get(nextIndex); // move to the next take
+        //TODO - I totally reworked how takes are tracked, this may break down later and/or we may want to trim this class down to account for that
+        takes.remove(takes.size()-1);
+        boolean wrap = takes.isEmpty();
         getScene().setWrap(wrap);
     }
 

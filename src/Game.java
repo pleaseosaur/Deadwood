@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Map;
+import java.util.HashMap;
 
 public class Game {
     private GameManager manager;
@@ -19,6 +20,7 @@ public class Game {
     private JPanel panel, buttonPanel, statsPanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
     private JLayeredPane layeredPane;
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips;
+    private Map<Take, JLabel> takeLabels = new HashMap<>();
 
 
     public static void main(String[] args) {
@@ -111,7 +113,11 @@ public class Game {
         };
 
         ActionListener actListener = e -> {
-            manager.act(); // TODO - act logic
+            boolean actSuccess = manager.act(); // TODO - act logic
+            if(actSuccess){
+                clearTakes();
+                showTakes();
+            }
             currentPlayerInfo();
         };
 
@@ -219,7 +225,19 @@ public class Game {
             JLabel takeLabel = new JLabel(takeImage); // Add the image icon to a label
             takeLabel.setBounds(x, y, w, h); // Set the size of the take label
             layeredPane.add(takeLabel, Integer.valueOf(1)); // Add the take to the second layer
+
+            takeLabels.put(take, takeLabel); // Stores take label into Map
         });
+    }
+
+    private void clearTakes() {
+        int counter = 0;
+        for (JLabel takeLabel : takeLabels.values()) {
+            counter++;
+            layeredPane.remove(takeLabel);
+        }
+        takeLabels.clear();
+        layeredPane.repaint();
     }
 
 
