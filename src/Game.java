@@ -9,6 +9,7 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Map;
@@ -78,75 +79,121 @@ public class Game {
         JPanel middleButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
+
         // create action listeners for each button
-        ActionListener moveListener = e -> {
-            JPopupMenu locationMenu = new JPopupMenu();
-            for(String location : manager.getAvailableLocations()) {
-                JMenuItem menuItem = new JMenuItem(location);
-                menuItem.addActionListener(a -> {
-                    manager.move(location);
-                    showTokens();
-                    currentPlayerInfo();
-                });
-                locationMenu.add(menuItem);
-            }
-            locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2);
-        };
+//        ActionListener moveListener = e -> { // move button
+//            JPopupMenu locationMenu = new JPopupMenu(); // create popup menu
+//            for(String location : manager.getAvailableLocations()) { // add each location to the menu
+//                JMenuItem menuItem = new JMenuItem(location);
+//                menuItem.addActionListener(a -> {
+//                    manager.move(location); // move to the selected location
+//                    showTokens(); // update player tokens
+//                    currentPlayerInfo(); // update player stats
+//                });
+//                locationMenu.add(menuItem); // add the menu item to the menu
+//            }
+//            locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2); // show the menu
+//        };
 
-        ActionListener takeRoleListener = e -> {
-            JPopupMenu roleMenu = new JPopupMenu();
-            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) {
-                JMenuItem menuItem = new JMenuItem(role.getKey() + role.getValue());
-                menuItem.addActionListener(a -> {
-                    manager.takeRole(role.getKey());
-                    showTokens();
-                    currentPlayerInfo();
-                });
-                roleMenu.add(menuItem);
-            }
-            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2);
-        };
 
-        ActionListener rehearseListener = e -> {
-            manager.rehearse(); // TODO - rehearse logic
-            currentPlayerInfo();
-        };
+//        ActionListener takeRoleListener = e -> { // take role button
+//            JPopupMenu roleMenu = new JPopupMenu(); // create popup menu
+//            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) { // add each role to the menu
+//                JMenuItem roleItem = new JMenuItem(role.getKey() + role.getValue());
+//                roleItem.addActionListener(a -> {
+//                    manager.takeRole(role.getKey()); // take the selected role
+//                    showTokens(); // update player tokens
+//                    currentPlayerInfo(); // update player stats
+//                });
+//                roleMenu.add(roleItem); // add the menu item to the menu
+//            }
+//            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2); // show the menu
+//        };
 
-        ActionListener actListener = e -> {
-            boolean actSuccess = manager.act(); // TODO - act logic
-            if(actSuccess){
-                clearTakes();
-                showTakes();
-            }
-            currentPlayerInfo();
-        };
 
-        ActionListener upgradeListener = e -> {
-            Area area = new Area(0, 0, 0, 0); // dummy area - remove
-            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
-            manager.upgrade(upgrade, "$"); // TODO - upgrade logic
-            currentPlayerInfo();
-        };
+//        ActionListener rehearseListener = e -> { // rehearse button
+//            manager.rehearse(); // TODO - rehearse logic
+//            currentPlayerInfo();
+//        };
 
-        ActionListener endTurnListener = e -> {
-            manager.endTurn();
-            currentPlayerInfo();
-        };
+
+//        ActionListener actListener = e -> { // act button
+//            boolean actSuccess = manager.act(); // act and get result
+//
+//            // Get the player's location
+//            int[] playerPosition = manager.getCurrentPlayer().getPosition(); // get player position
+//
+//            // Create a JLabel for the message
+//            JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
+//            messageLabel.setFont(new Font("Serif", Font.BOLD, 50)); // set font and size
+//            messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
+//            messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
+//
+//            // Add the label to your layeredPane or main panel
+//            layeredPane.add(messageLabel, JLayeredPane.POPUP_LAYER); // add message to layered pane
+//
+//            // Create a Timer
+//            int delay = 100; // delay
+//            int totalDuration = 2000; // total duration
+//
+//            ActionListener taskPerformer = new ActionListener() { // fade out the message
+//
+//                int trigger = 0; // trigger counter
+//                public void actionPerformed(ActionEvent evt) { // action to perform
+//                    float opacity = 1.0f - ((float) trigger * delay / totalDuration); // calculate opacity
+//                    // Set the opacity
+//                    messageLabel.setForeground(new Color(
+//                            messageLabel.getForeground().getRed() / 255f,
+//                            messageLabel.getForeground().getGreen() / 255f,
+//                            messageLabel.getForeground().getBlue() / 255f,
+//                            opacity));
+//                    trigger++; // increment trigger counter
+//                    if (trigger * delay >= totalDuration) { // stop the timer when total delay is reached
+//                        ((Timer)evt.getSource()).stop();
+//                        layeredPane.remove(messageLabel); // remove the message
+//                        layeredPane.repaint(); // repaint the layered pane
+//                    }
+//                }
+//            };
+//
+//            // Start the timer
+//            new Timer(delay, taskPerformer).start(); // start the timer
+//
+//            if(actSuccess){ // if the act was successful
+//                clearTakes(); // clear the shot counters
+//                showTakes(); // update the shot counters
+//            }
+//            currentPlayerInfo(); // update player stats
+//        };
+
+
+//        ActionListener upgradeListener = e -> { // upgrade button
+//            Area area = new Area(0, 0, 0, 0); // dummy area - remove
+//            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
+//            manager.upgrade(upgrade, "$"); // TODO - upgrade logic
+//            currentPlayerInfo();
+//        };
+
+
+//        ActionListener endTurnListener = e -> { // end turn button
+//            manager.endTurn();
+//            currentPlayerInfo();
+//        };
 
 
         // create buttons and add to respective panels
-        this.btn_move  = createButton("Move", buttonSize, 100, 0, moveListener);
-        this.btn_role  = createButton("Take Role", buttonSize, 100, 0, takeRoleListener);
+        this.btn_move  = createButton("Move", buttonSize, 100, 0, moveListener());
+        this.btn_role  = createButton("Take Role", buttonSize, 100, 0, takeRoleListener());
         topButtons.add(btn_move);
         topButtons.add(btn_role);
 
-        this.btn_rehearse = createButton("Rehearse", buttonSize, 10, 10, rehearseListener);
-        this.btn_act = createButton("Act", buttonSize, 10, 10, actListener);
+        this.btn_rehearse = createButton("Rehearse", buttonSize, 10, 10, rehearseListener());
+        this.btn_act = createButton("Act", buttonSize, 10, 10, actListener());
         middleButtons.add(btn_rehearse);
         middleButtons.add(btn_act);
 
-        this.btn_upgrade = createButton("Upgrade", buttonSize, 0, 200, upgradeListener);
-        this.btn_end = createButton("End Turn", buttonSize, 0, 200, endTurnListener);
+        this.btn_upgrade = createButton("Upgrade", buttonSize, 0, 200, upgradeListener());
+        this.btn_end = createButton("End Turn", buttonSize, 0, 200, endTurnListener());
         bottomButtons.add(btn_upgrade);
         bottomButtons.add(btn_end);
 
@@ -174,6 +221,112 @@ public class Game {
         statsPanel.add(playerChips);
     }
 
+    private ActionListener moveListener() {
+        return e -> {
+            JPopupMenu locationMenu = new JPopupMenu(); // Create a popup menu for the locations
+            for(String location : manager.getAvailableLocations()) {
+                JMenuItem locationItem = new JMenuItem(location); // Create a menu item for the location
+                locationItem.addActionListener(a -> {
+                    manager.move(location); // Move player to the selected location
+                    showTokens();
+                    currentPlayerInfo();
+                });
+                locationMenu.add(locationItem); // Add location to the location menu
+            }
+            locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2); // Show the location menu
+        };
+    }
+
+    private ActionListener takeRoleListener() {
+        return e -> {
+            JPopupMenu roleMenu = new JPopupMenu(); // create popup menu
+            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) { // add each role to the menu
+                JMenuItem roleItem = new JMenuItem(role.getKey() + role.getValue());
+                roleItem.addActionListener(a -> {
+                    manager.takeRole(role.getKey()); // take the selected role
+                    showTokens(); // update player tokens
+                    currentPlayerInfo(); // update player stats
+                });
+                roleMenu.add(roleItem); // add the menu item to the menu
+            }
+            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2); // show the menu
+        };
+    }
+
+    private ActionListener rehearseListener() {
+        return e -> { // TODO - rehearse logic
+            manager.rehearse(); // rehearse
+            currentPlayerInfo(); // update player stats
+        };
+    }
+
+    private ActionListener actListener() {
+        return e -> {
+            boolean actSuccess = manager.act(); // act and get result
+
+            // Get the player's location
+            int[] playerPosition = manager.getCurrentPlayer().getPosition(); // get player position
+
+            // Create a JLabel for the message
+            JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
+            messageLabel.setFont(new Font("Serif", Font.BOLD, 50)); // set font and size
+            messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
+            messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
+
+            // Add the label to your layeredPane or main panel
+            layeredPane.add(messageLabel, JLayeredPane.POPUP_LAYER); // add message to layered pane
+
+            // Create a Timer
+            int delay = 100; // delay
+            int totalDuration = 2000; // total duration
+
+            ActionListener taskPerformer = new ActionListener() { // fade out the message
+
+                int trigger = 0; // trigger counter
+                public void actionPerformed(ActionEvent evt) { // action to perform
+                    float opacity = 1.0f - ((float) trigger * delay / totalDuration); // calculate opacity
+                    // Set the opacity
+                    messageLabel.setForeground(new Color(
+                            messageLabel.getForeground().getRed() / 255f,
+                            messageLabel.getForeground().getGreen() / 255f,
+                            messageLabel.getForeground().getBlue() / 255f,
+                            opacity));
+                    trigger++; // increment trigger counter
+                    if (trigger * delay >= totalDuration) { // stop the timer when total delay is reached
+                        ((Timer)evt.getSource()).stop();
+                        layeredPane.remove(messageLabel); // remove the message
+                        layeredPane.repaint(); // repaint the layered pane
+                    }
+                }
+            };
+
+            // Start the timer
+            new Timer(delay, taskPerformer).start(); // start the timer
+
+            if(actSuccess){ // if the act was successful
+                clearTakes(); // clear the shot counters
+                showTakes(); // update the shot counters
+            }
+            currentPlayerInfo(); // update player stats
+        };
+    }
+
+    private ActionListener upgradeListener() {
+        return e -> {
+            Area area = new Area(0, 0, 0, 0); // dummy area - remove
+            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
+            manager.upgrade(upgrade, "$"); // TODO - upgrade logic
+            currentPlayerInfo(); // update player stats
+        };
+    }
+
+    private ActionListener endTurnListener() {
+        return e -> {
+            manager.endTurn();
+            currentPlayerInfo();
+        };
+    }
+
 
     private void setupRightPanel() {
         JPanel rightPanel = new JPanel(new BorderLayout());
@@ -198,8 +351,16 @@ public class Game {
     }
 
 
-    // TODO - refactor to allow single card images to be replaced and redisplayed
     private void showCards() {
+        // Remove all components in layer 2
+        Component[] components = layeredPane.getComponentsInLayer(2);
+        for (Component c : components) {
+            layeredPane.remove(c);
+        }
+        // Refresh the layeredPane after removals
+        layeredPane.revalidate();
+        layeredPane.repaint();
+
         manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
             String path = card.getImg(); // Get the path to the card image
             int x = area.get(0); // Get the x coordinate of the card
@@ -209,9 +370,10 @@ public class Game {
             ImageIcon cardImage = getImage(path); // Create an image icon from the path
             JLabel cardLabel = new JLabel(cardImage); // Add the image icon to a label
             cardLabel.setBounds(x, y, w, h); // Set the size of the card label
-            layeredPane.add(cardLabel, Integer.valueOf(1)); // Add the card to the second layer
+            layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
         });
     }
+
 
 
     private void showTakes() {
@@ -231,19 +393,17 @@ public class Game {
     }
 
     private void clearTakes() {
-        int counter = 0;
-        for (JLabel takeLabel : takeLabels.values()) {
-            counter++;
-            layeredPane.remove(takeLabel);
+        for (JLabel takeLabel : takeLabels.values()) { // Iterate through the take labels
+            layeredPane.remove(takeLabel); // Remove the take label from the layered pane
         }
-        takeLabels.clear();
-        layeredPane.repaint();
+        takeLabels.clear(); // Clear the take labels map
+        layeredPane.repaint(); // Repaint the layered pane
     }
 
 
     private void showTokens() {
-        // Remove all components in layer 2
-        Component[] components = layeredPane.getComponentsInLayer(2);
+        // Remove all components in layer 3
+        Component[] components = layeredPane.getComponentsInLayer(3);
         for (Component c : components) {
             layeredPane.remove(c);
         }
@@ -257,7 +417,7 @@ public class Game {
             ImageIcon token = getImage(path); // Create an image icon from the path
             JLabel tokenLabel = new JLabel(token); // Add the image icon to a label
             tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight()); // Set the size of the token label
-            layeredPane.add(tokenLabel, Integer.valueOf(2)); // Add the token to the third layer
+            layeredPane.add(tokenLabel, Integer.valueOf(3)); // Add the token to the third layer
         });
     }
 
@@ -290,28 +450,29 @@ public class Game {
     }
 
 
-    private JLabel createLabel(String text, int fontSize, int spacing) {
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("Serif", Font.BOLD, fontSize));
-        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0));
+    private JLabel createLabel(String text, int fontSize, int spacing) { // Create a label with the given text, font size, and spacing
+        JLabel label = new JLabel(text); // Create a label with the given text
+        label.setFont(new Font("Serif", Font.BOLD, fontSize)); // Set the font of the label
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0)); // Set the border of the label
         return label;
     }
 
 
     private JPanel createButton(String buttonName, Dimension buttonSize, int top, int bottom, ActionListener action) {
-        JButton button = new JButton(buttonName);
-        button.setPreferredSize(buttonSize);
-        button.addActionListener(action);
+        JButton button = new JButton(buttonName); // Create a button with the given name
+        button.setPreferredSize(buttonSize); // Set the size of the button
+        button.addActionListener(action); // Add the action listener to the button
 
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(button);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
+        JPanel buttonPanel = new JPanel(new FlowLayout()); // Create a panel for the button
+        buttonPanel.add(button); // Add the button to the panel
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0)); // Set the border of the panel
         return buttonPanel;
     }
 
-    private void showActiveButtons() {
-        var availableActions = manager.getAvailableActions();
+    private void showActiveButtons() { // Show the buttons that the player can use
+        var availableActions = manager.getAvailableActions(); // Get the available actions for the player
 
+        // Set the style of the buttons based on the available actions
         setButtonStyle(btn_move, availableActions.contains("Move"));
         setButtonStyle(btn_role, availableActions.contains("Take Role") && !manager.getAvailableRoles().isEmpty());
         setButtonStyle(btn_rehearse, availableActions.contains("Rehearse"));
@@ -320,14 +481,14 @@ public class Game {
         setButtonStyle(btn_end, availableActions.contains("End Turn"));
     }
 
-    private void setButtonStyle(JPanel button, boolean enabled) {
-        button.setEnabled(enabled);
-        for(Component c : button.getComponents()) {
-            c.setEnabled(enabled);
-            if(c instanceof JLabel label) {
-                label.setForeground(enabled ? Color.BLACK : Color.GRAY);
-            } else if(c instanceof JButton btn) {
-                btn.setForeground(enabled ? Color.BLACK : Color.GRAY);
+    private void setButtonStyle(JPanel button, boolean enabled) { // Set the style of the button based on the enabled status
+        button.setEnabled(enabled); // Set the enabled status of the button
+        for(Component c : button.getComponents()) { // Iterate through the components of the button
+            c.setEnabled(enabled); // Set the enabled status of the component
+            if(c instanceof JLabel label) { // If the component is a label
+                label.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the label
+            } else if(c instanceof JButton btn) { // If the component is a button
+                btn.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the button
             }
         }
     }

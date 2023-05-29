@@ -107,7 +107,6 @@ public class GameManager {
 
         boolean isSuccess = false;
         if(diceResult >= budget){ // acting success
-            System.out.println("\nYour act was a success!");
             isSuccess = true;
 
             // TODO -- move to UI for GUI implementation
@@ -116,8 +115,6 @@ public class GameManager {
 
             set.decrementTakes(); // decrement takes
 
-        } else { // acting failure
-            System.out.println("\nYour act was not successful.");
         }
         
         //payout
@@ -338,7 +335,7 @@ public class GameManager {
         Location currentLocation = currentPlayer.getLocation();
 
         if(currentPlayer.getRole() == null) {
-            if(!currentPlayer.getHasMoved()) {
+            if(!currentPlayer.getHasMoved() && !currentPlayer.getHasActed()) {
                 availableActions.add("Move");
             }
             if(currentLocation instanceof Set) {
