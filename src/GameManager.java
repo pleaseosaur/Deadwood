@@ -60,11 +60,14 @@ public class GameManager {
         allRoles.addAll(onCardRoles);
 
         for(Role role : allRoles) {
-            if(role.getName().equals(r)) {
-                currentPlayer.setRole(role);
-                currentPlayer.setHasTakenRole(true);
-                role.setTaken(true);
+            if(!role.isTaken()) {
+                if(role.getName().equals(r)) {
+                    currentPlayer.setRole(role);
+                    currentPlayer.setHasTakenRole(true);
+                    role.setTaken(true);
+                }
             }
+
         }
     }
 
@@ -321,31 +324,25 @@ public class GameManager {
     }
 
 
-    public List<String> getAvailableActions() { // TODO -- Take Role doesn't deactivate & Move activates on next turn after taking a role
+    public List<String> getAvailableActions() {
 
         List<String> availableActions = new ArrayList<>();
-        List<String> availableRoles = getAvailableRoles();
         Location currentLocation = currentPlayer.getLocation();
 
-        // If the player doesn't have a role and hasn't just taken a role
-        if(currentPlayer.getRole() == null && !currentPlayer.getHasTakenRole()) {
-
-            // If the player hasn't moved
+        if(currentPlayer.getRole() == null) {
             if(!currentPlayer.getHasMoved()) {
                 availableActions.add("Move");
             }
-
-            // If player is at a Set, the Scene isn't wrapped, and there are roles available
-            if(currentLocation instanceof Set && !((Set) currentLocation).getScene().isWrapped() && !availableRoles.isEmpty()) {
-                availableActions.add("Take Role");
+            if(currentLocation instanceof Set) {
+                if(!((Set) currentLocation).getScene().isWrapped()) { //TODO - may need to add additional check for hasTakenRole
+                    availableActions.add("Take Role");
+                }
             }
         }
 
-        // If the player has a role and hasn't acted
         if(currentPlayer.getRole() != null) {
-            if(!currentPlayer.getHasActed()) {
+            if(!currentPlayer.getHasActed() && !currentPlayer.getHasRehearsed() && !currentPlayer.getHasTakenRole()) {
                 availableActions.add("Act");
-                // If the player is on a card and hasn't rehearsed
                 if(currentPlayer.getRole().isOnCard() && !currentPlayer.getHasRehearsed()) {
                     availableActions.add("Rehearse");
                 }
@@ -375,10 +372,10 @@ public class GameManager {
 
 
     // getAvailableRoles: makes list of roles available for taking
-    public List<String> getAvailableRoles() {
+    public Map<String, String> getAvailableRoles() {
 
         Location playerLocation = currentPlayer.getLocation();
-        List<String> availableRoles = new ArrayList<>();
+        Map<String, String> availableRoles = new HashMap<>();
 
 
         if(playerLocation.isSet()){ // if player is on a set
@@ -392,13 +389,13 @@ public class GameManager {
 
                 for(Role role : offCardRoles) {
                     if(!role.isTaken() && role.getRank() <= rank) {
-                        availableRoles.add(role.getName() + " (Off-Card) Rank: " + role.getRank());
+                        availableRoles.put(role.getName(), " (Off-Card) Rank: " + role.getRank());
                     }
                 }
 
                 for(Role role : onCardRoles) {
                     if(!role.isTaken() && role.getRank() <= rank) {
-                        availableRoles.add(role.getName() + " (On-Card) Rank: " + role.getRank());
+                        availableRoles.put(role.getName(), " (On-Card) Rank: " + role.getRank());
                     }
                 }
             }

@@ -11,6 +11,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.util.Map;
 
 public class Game {
     private GameManager manager;
@@ -92,10 +93,11 @@ public class Game {
 
         ActionListener takeRoleListener = e -> {
             JPopupMenu roleMenu = new JPopupMenu();
-            for(String role : manager.getAvailableRoles()) {
-                JMenuItem menuItem = new JMenuItem(role);
+            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) {
+                JMenuItem menuItem = new JMenuItem(role.getKey() + role.getValue());
                 menuItem.addActionListener(a -> {
-                    manager.takeRole(role);
+                    manager.takeRole(role.getKey());
+                    showTokens();
                     currentPlayerInfo();
                 });
                 roleMenu.add(menuItem);
