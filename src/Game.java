@@ -208,6 +208,7 @@ public class Game {
                 showTakes(); // update the shot counters
             }
             currentPlayerInfo(); // update player stats
+            showCards(); // update player cards
         };
     }
 
