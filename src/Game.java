@@ -214,12 +214,91 @@ public class Game {
 
     private ActionListener upgradeListener() {
         return e -> {
-            Area area = new Area(0, 0, 0, 0); // dummy area - remove
-            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
-            manager.upgrade(upgrade, "$"); // TODO - upgrade logic
-            currentPlayerInfo(); // update player stats
+            // Get available upgrades and player's current money
+            var availableUpgrades = manager.getAvailableUpgrades();
+            int playerDollars = manager.getCurrentPlayer().getDollars();
+            int playerCredits = manager.getCurrentPlayer().getCredits();
+
+            // Create the dialog and set a grid layout
+            JDialog dialog = new JDialog();
+            dialog.setLayout(new GridLayout(0, 1));
+
+            // Create a button group for the rank radio buttons
+            ButtonGroup rankGroup = new ButtonGroup();
+
+            // Create a map to hold the button groups for the currency radio buttons
+            Map<Integer, ButtonGroup> currencyGroups = new HashMap<>();
+
+            // Iterate through each available upgrade
+            availableUpgrades.forEach((rank, currency) -> {
+                JRadioButton rankButton = new JRadioButton("Rank " + rank);
+                rankButton.setActionCommand(String.valueOf(rank));
+                rankGroup.add(rankButton);
+                dialog.add(rankButton);
+
+                ButtonGroup currencyGroup = new ButtonGroup();
+                currencyGroups.put(rank, currencyGroup);
+
+                for (String option : currency) {
+                    String[] parts = option.split(" ");
+                    int price = Integer.parseInt(parts[0]);
+
+                    // Only enable the radio button if the player can afford the upgrade
+                    boolean canAfford = parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
+
+                    JRadioButton currencyButton = new JRadioButton(parts[0] + " " + parts[1]);
+                    currencyButton.setEnabled(canAfford);
+                    currencyButton.setActionCommand(parts[1]);
+                    currencyGroup.add(currencyButton);
+                    dialog.add(currencyButton);
+                }
+
+                // Only enable the rank radio button if the player can afford any of the upgrade options
+                boolean canAffordAny = currency.stream().anyMatch(option -> {
+                    String[] parts = option.split(" ");
+                    int price = Integer.parseInt(parts[0]);
+                    return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
+                });
+                rankButton.setEnabled(canAffordAny);
+            });
+
+            // Create a button to confirm the upgrade
+            JButton confirmButton = new JButton("Confirm Upgrade");
+            confirmButton.addActionListener(a -> {
+                String rankStr = rankGroup.getSelection().getActionCommand();
+                String currency = currencyGroups.get(Integer.parseInt(rankStr)).getSelection().getActionCommand();
+
+                // Get the selected upgrade
+                Upgrade selectedUpgrade = null;
+                for (Upgrade upgrade : ((CastingOffice) manager.getCurrentPlayer().getLocation()).getUpgrades()) {
+                    if (upgrade.getRank() == Integer.parseInt(rankStr) && upgrade.getCurrency().equals(currency)) {
+                        selectedUpgrade = upgrade;
+                        break;
+                    }
+                }
+
+                // Perform the upgrade
+                if (selectedUpgrade != null) {
+                    manager.upgrade(selectedUpgrade, currency);
+                    dialog.dispose(); // Close the dialog
+                    currentPlayerInfo(); // Update player stats
+                }
+            });
+            dialog.add(confirmButton);
+
+            // Create a button to cancel the upgrade
+            JButton cancelButton = new JButton("Cancel");
+            cancelButton.addActionListener(a -> dialog.dispose());
+            dialog.add(cancelButton);
+
+            // Set the dialog properties
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.pack();
+            dialog.setVisible(true);
         };
     }
+
+
 
     private ActionListener endTurnListener() {
         return e -> {
