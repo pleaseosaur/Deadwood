@@ -364,6 +364,17 @@ public class GameManager {
         return availableActions;
     }
 
+    public List<String> getAvailableLocations() {
+        List<String> availableLocations = new ArrayList<>();
+        Location currentLocation = currentPlayer.getLocation();
+
+        for(Location neighbor : currentLocation.getNeighbors()) {
+            availableLocations.add(neighbor.getName());
+        }
+
+        return availableLocations;
+    }
+
     // getAvailableRoles: makes list of roles available for taking
     public Map<String, String> getAvailableRoles() {
 

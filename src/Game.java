@@ -77,8 +77,17 @@ public class Game {
 
         // create action listeners for each button
         ActionListener moveListener = e -> {
-            manager.move("location"); // TODO - move logic
-            currentPlayerInfo();
+            JPopupMenu locationMenu = new JPopupMenu();
+            for(String location : manager.getAvailableLocations()) {
+                JMenuItem menuItem = new JMenuItem(location);
+                menuItem.addActionListener(a -> {
+                    manager.move(location);
+                    showTokens();
+                    currentPlayerInfo();
+                });
+                locationMenu.add(menuItem);
+            }
+            locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2);
         };
 
         ActionListener takeRoleListener = e -> {
@@ -175,52 +184,53 @@ public class Game {
 
     // TODO - refactor to allow single card images to be replaced and redisplayed
     private void showCards() {
-        manager.getCards().forEach((card, area) -> {
-            String path = card.getImg();
-            int x = area.get(0);
-            int y = area.get(1);
-            int w = area.get(2);
-            int h = area.get(3);
-            ImageIcon cardImage = getImage(path);
-            JLabel cardLabel = new JLabel(cardImage);
-            cardLabel.setBounds(x, y, w, h);
-            layeredPane.add(cardLabel, Integer.valueOf(1));
+        manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
+            String path = card.getImg(); // Get the path to the card image
+            int x = area.get(0); // Get the x coordinate of the card
+            int y = area.get(1); // Get the y coordinate of the card
+            int w = area.get(2); // Get the width of the card
+            int h = area.get(3); // Get the height of the card
+            ImageIcon cardImage = getImage(path); // Create an image icon from the path
+            JLabel cardLabel = new JLabel(cardImage); // Add the image icon to a label
+            cardLabel.setBounds(x, y, w, h); // Set the size of the card label
+            layeredPane.add(cardLabel, Integer.valueOf(1)); // Add the card to the second layer
         });
     }
 
 
     private void showTakes() {
-        manager.getTakes().forEach((take, area) -> {
-            String path = take.getImg();
-            int x = area.get(0);
-            int y = area.get(1);
-            int w = area.get(2);
-            int h = area.get(3);
-            ImageIcon takeImage = getImage(path);
-            JLabel takeLabel = new JLabel(takeImage);
-            takeLabel.setBounds(x, y, w, h);
-            layeredPane.add(takeLabel, Integer.valueOf(1));
+        manager.getTakes().forEach((take, area) -> { // Iterate through the takes and their areas
+            String path = take.getImg(); // Get the path to the take image
+            int x = area.get(0); // Get the x coordinate of the take
+            int y = area.get(1); // Get the y coordinate of the take
+            int w = area.get(2); // Get the width of the take
+            int h = area.get(3); // Get the height of the take
+            ImageIcon takeImage = getImage(path); // Create an image icon from the path
+            JLabel takeLabel = new JLabel(takeImage); // Add the image icon to a label
+            takeLabel.setBounds(x, y, w, h); // Set the size of the take label
+            layeredPane.add(takeLabel, Integer.valueOf(1)); // Add the take to the second layer
         });
     }
 
 
     private void showTokens() {
-        manager.getTokens().forEach((path, position) -> {
-            int x = position[0];
-            int y = position[1];
-            ImageIcon token = getImage(path);
-            JLabel tokenLabel = new JLabel(token);
-            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight());
-            layeredPane.add(tokenLabel, Integer.valueOf(2));
+        manager.getTokens().forEach((path, position) -> { // Iterate through the tokens and their positions
+            int x = position[0]; // Get the x coordinate of the token
+            int y = position[1]; // Get the y coordinate of the token
+            ImageIcon token = getImage(path); // Create an image icon from the path
+            JLabel tokenLabel = new JLabel(token); // Add the image icon to a label
+            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight()); // Set the size of the token label
+            layeredPane.add(tokenLabel, Integer.valueOf(2)); // Add the token to the third layer
         });
     }
 
 
     private void currentPlayerInfo() {
-        Player currentPlayer = manager.getCurrentPlayer();
 
+        Player currentPlayer = manager.getCurrentPlayer();
         String color = currentPlayer.getColor();
-        switch (color) {
+
+        switch (color) { // Set the color of the player name based on their color
             case "b" -> playerName.setForeground(Color.BLUE);
             case "c" -> playerName.setForeground(Color.CYAN);
             case "g" -> playerName.setForeground(Color.GREEN);
@@ -232,13 +242,13 @@ public class Game {
             case "y" -> playerName.setForeground(Color.YELLOW);
         }
 
-        playerName.setText(currentPlayer.getName());
-        playerRank.setText("Rank: " + currentPlayer.getRank());
-        playerDollars.setText("Dollars: " + currentPlayer.getDollars());
-        playerCredits.setText("Credits: " + currentPlayer.getCredits());
-        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips());
+        playerName.setText(currentPlayer.getName()); // Set the player name
+        playerRank.setText("Rank: " + currentPlayer.getRank()); // Set player rank
+        playerDollars.setText("Dollars: " + currentPlayer.getDollars()); // Set player dollars
+        playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
+        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
 
-        showActiveButtons();
+        showActiveButtons(); // Show the buttons that the player can use
     }
 
 
@@ -254,6 +264,24 @@ public class Game {
         JButton button = new JButton(buttonName);
         button.setPreferredSize(buttonSize);
         button.addActionListener(action);
+
+//        if (buttonName.equals("Move")) {
+//            JPopupMenu locationMenu = new JPopupMenu();
+//            for (String location : manager.getAvailableLocations()) {
+//                JMenuItem menuItem = new JMenuItem(location);
+//                menuItem.addActionListener(a -> {
+//                    manager.move(location);
+//                    currentPlayerInfo();
+//                });
+//                locationMenu.add(menuItem);
+//            }
+//            button.addMouseListener(new MouseAdapter() {
+//                public void mousePressed(MouseEvent e) {
+//                    locationMenu.show(e.getComponent(), e.getX(), e.getY());
+//                }
+//            });
+//        }
+
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(button);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
