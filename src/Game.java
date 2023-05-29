@@ -91,8 +91,16 @@ public class Game {
         };
 
         ActionListener takeRoleListener = e -> {
-            manager.takeRole("role"); // TODO - take role logic
-            currentPlayerInfo();
+            JPopupMenu roleMenu = new JPopupMenu();
+            for(String role : manager.getAvailableRoles()) {
+                JMenuItem menuItem = new JMenuItem(role);
+                menuItem.addActionListener(a -> {
+                    manager.takeRole(role);
+                    currentPlayerInfo();
+                });
+                roleMenu.add(menuItem);
+            }
+            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2);
         };
 
         ActionListener rehearseListener = e -> {
@@ -265,23 +273,6 @@ public class Game {
         button.setPreferredSize(buttonSize);
         button.addActionListener(action);
 
-//        if (buttonName.equals("Move")) {
-//            JPopupMenu locationMenu = new JPopupMenu();
-//            for (String location : manager.getAvailableLocations()) {
-//                JMenuItem menuItem = new JMenuItem(location);
-//                menuItem.addActionListener(a -> {
-//                    manager.move(location);
-//                    currentPlayerInfo();
-//                });
-//                locationMenu.add(menuItem);
-//            }
-//            button.addMouseListener(new MouseAdapter() {
-//                public void mousePressed(MouseEvent e) {
-//                    locationMenu.show(e.getComponent(), e.getX(), e.getY());
-//                }
-//            });
-//        }
-
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(button);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
@@ -292,7 +283,7 @@ public class Game {
         var availableActions = manager.getAvailableActions();
 
         setButtonStyle(btn_move, availableActions.contains("Move"));
-        setButtonStyle(btn_role, availableActions.contains("Take Role"));
+        setButtonStyle(btn_role, availableActions.contains("Take Role") && !manager.getAvailableRoles().isEmpty());
         setButtonStyle(btn_rehearse, availableActions.contains("Rehearse"));
         setButtonStyle(btn_act, availableActions.contains("Act"));
         setButtonStyle(btn_upgrade, availableActions.contains("Upgrade"));

@@ -32,7 +32,7 @@ public class GameManager {
 
 
     // player actions
-    public void move(String location) {
+    public void move(String location) { // TODO - add logic to update player x, y coordinates
             currentPlayer.setLocation(currentPlayer.getLocation().getNeighbor(location));
             currentPlayer.setHasMoved(true);
     }
@@ -61,17 +61,10 @@ public class GameManager {
 
         for(Role role : allRoles) {
             if(role.getName().equals(r)) {
-                if(!role.isTaken()) {
-                    if(currentPlayer.getRank() >= role.getRank()) {
-                        currentPlayer.setRole(role);
-                        currentPlayer.setHasTakenRole(true);
-                        role.setTaken(true);
-                    } else {
-                        System.out.println("\nYou do not have a high enough rank to take this role.");
-                    }
-                }
+                currentPlayer.setRole(role);
+                currentPlayer.setHasTakenRole(true);
+                role.setTaken(true);
             }
-
         }
     }
 
@@ -90,7 +83,7 @@ public class GameManager {
         }
     }
 
-    public boolean act() {
+    public void act() {
         Set set = (Set) currentPlayer.getLocation(); // get current set
         int budget = set.getScene().getBudget(); // get budget
 
@@ -123,9 +116,7 @@ public class GameManager {
         
         if(set.getScene().isWrapped()){
             wrapScene();
-            return true;
         }
-        return false;
     }
 
     // actPay: pays players for acting
@@ -329,26 +320,32 @@ public class GameManager {
         return winners;
     }
 
-    public List<String> getAvailableActions() {
+
+    public List<String> getAvailableActions() { // TODO -- Take Role doesn't deactivate & Move activates on next turn after taking a role
 
         List<String> availableActions = new ArrayList<>();
-        Map<String, String> availableRoles = getAvailableRoles();
+        List<String> availableRoles = getAvailableRoles();
         Location currentLocation = currentPlayer.getLocation();
 
-        if(currentPlayer.getRole() == null) {
+        // If the player doesn't have a role and hasn't just taken a role
+        if(currentPlayer.getRole() == null && !currentPlayer.getHasTakenRole()) {
+
+            // If the player hasn't moved
             if(!currentPlayer.getHasMoved()) {
                 availableActions.add("Move");
             }
-            if(currentLocation instanceof Set) {
-                if(!((Set) currentLocation).getScene().isWrapped() && !availableRoles.isEmpty()) { //TODO - may need to add additional check for hasTakenRole
-                    availableActions.add("Take Role");
-                }
+
+            // If player is at a Set, the Scene isn't wrapped, and there are roles available
+            if(currentLocation instanceof Set && !((Set) currentLocation).getScene().isWrapped() && !availableRoles.isEmpty()) {
+                availableActions.add("Take Role");
             }
         }
 
+        // If the player has a role and hasn't acted
         if(currentPlayer.getRole() != null) {
             if(!currentPlayer.getHasActed()) {
                 availableActions.add("Act");
+                // If the player is on a card and hasn't rehearsed
                 if(currentPlayer.getRole().isOnCard() && !currentPlayer.getHasRehearsed()) {
                     availableActions.add("Rehearse");
                 }
@@ -364,6 +361,7 @@ public class GameManager {
         return availableActions;
     }
 
+
     public List<String> getAvailableLocations() {
         List<String> availableLocations = new ArrayList<>();
         Location currentLocation = currentPlayer.getLocation();
@@ -375,11 +373,12 @@ public class GameManager {
         return availableLocations;
     }
 
+
     // getAvailableRoles: makes list of roles available for taking
-    public Map<String, String> getAvailableRoles() {
+    public List<String> getAvailableRoles() {
 
         Location playerLocation = currentPlayer.getLocation();
-        Map<String, String> availableRoles = new HashMap<>();
+        List<String> availableRoles = new ArrayList<>();
 
 
         if(playerLocation.isSet()){ // if player is on a set
@@ -393,13 +392,13 @@ public class GameManager {
 
                 for(Role role : offCardRoles) {
                     if(!role.isTaken() && role.getRank() <= rank) {
-                        availableRoles.put(role.getName(), "(Off-Card) Rank: " + role.getRank());
+                        availableRoles.add(role.getName() + " (Off-Card) Rank: " + role.getRank());
                     }
                 }
 
                 for(Role role : onCardRoles) {
                     if(!role.isTaken() && role.getRank() <= rank) {
-                        availableRoles.put(role.getName(), "(On-Card) Rank: " + role.getRank());
+                        availableRoles.add(role.getName() + " (On-Card) Rank: " + role.getRank());
                     }
                 }
             }
