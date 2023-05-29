@@ -182,7 +182,9 @@ public class GameManager {
         }
         // decrement Open Scenes
         board.setOpenScenes(board.getOpenScenes()-1);
-        System.out.println(board.getOpenScenes()+" open scenes remaining."); // TODO -- move to UI for GUI implementation
+        if (board.getOpenScenes() == 1) {
+            endDay();
+        }
     }
 
     // wrapBonus: rolls for wrap bonuses if players are on card
@@ -290,7 +292,7 @@ public class GameManager {
     }
 
     // endDay: checks if day is over and resets players and roles
-    public boolean endDay() {
+    public void endDay() {
         if(board.checkEndDay()) {
             if(!checkEndGame()){
                 resetPlayers();
@@ -298,9 +300,7 @@ public class GameManager {
                 board.setOpenScenes(10);
                 board.dealCards(); // deal cards
             }
-            return true;
         }
-        return false;
     }
 
     public void decrementDay() {
