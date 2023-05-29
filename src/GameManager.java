@@ -33,8 +33,12 @@ public class GameManager {
 
     // player actions
     public void move(String location) { // TODO - add logic to update player x, y coordinates
-            currentPlayer.setLocation(currentPlayer.getLocation().getNeighbor(location));
-            currentPlayer.setHasMoved(true);
+        Location destination = currentPlayer.getLocation().getNeighbor(location);
+        int x = destination.getArea().getX();
+        int y = destination.getArea().getY();
+        currentPlayer.setLocation(destination);
+        currentPlayer.setPosition(x, y);
+        currentPlayer.setHasMoved(true);
     }
 
     public void upgrade(Upgrade upgrade, String currency) {
@@ -62,6 +66,9 @@ public class GameManager {
         for(Role role : allRoles) {
             if(!role.isTaken()) {
                 if(role.getName().equals(r)) {
+                    int x = role.getArea().getX();
+                    int y = role.getArea().getY();
+                    currentPlayer.setPosition(x, y);
                     currentPlayer.setRole(role);
                     currentPlayer.setHasTakenRole(true);
                     role.setTaken(true);

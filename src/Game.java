@@ -242,6 +242,15 @@ public class Game {
 
 
     private void showTokens() {
+        // Remove all components in layer 2
+        Component[] components = layeredPane.getComponentsInLayer(2);
+        for (Component c : components) {
+            layeredPane.remove(c);
+        }
+        // Refresh the layeredPane after removals
+        layeredPane.revalidate();
+        layeredPane.repaint();
+
         manager.getTokens().forEach((path, position) -> { // Iterate through the tokens and their positions
             int x = position[0]; // Get the x coordinate of the token
             int y = position[1]; // Get the y coordinate of the token
@@ -251,6 +260,7 @@ public class Game {
             layeredPane.add(tokenLabel, Integer.valueOf(2)); // Add the token to the third layer
         });
     }
+
 
 
     private void currentPlayerInfo() {
