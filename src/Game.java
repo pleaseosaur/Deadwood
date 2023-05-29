@@ -80,107 +80,6 @@ public class Game {
         JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
 
-        // create action listeners for each button
-//        ActionListener moveListener = e -> { // move button
-//            JPopupMenu locationMenu = new JPopupMenu(); // create popup menu
-//            for(String location : manager.getAvailableLocations()) { // add each location to the menu
-//                JMenuItem menuItem = new JMenuItem(location);
-//                menuItem.addActionListener(a -> {
-//                    manager.move(location); // move to the selected location
-//                    showTokens(); // update player tokens
-//                    currentPlayerInfo(); // update player stats
-//                });
-//                locationMenu.add(menuItem); // add the menu item to the menu
-//            }
-//            locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2); // show the menu
-//        };
-
-
-//        ActionListener takeRoleListener = e -> { // take role button
-//            JPopupMenu roleMenu = new JPopupMenu(); // create popup menu
-//            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) { // add each role to the menu
-//                JMenuItem roleItem = new JMenuItem(role.getKey() + role.getValue());
-//                roleItem.addActionListener(a -> {
-//                    manager.takeRole(role.getKey()); // take the selected role
-//                    showTokens(); // update player tokens
-//                    currentPlayerInfo(); // update player stats
-//                });
-//                roleMenu.add(roleItem); // add the menu item to the menu
-//            }
-//            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2); // show the menu
-//        };
-
-
-//        ActionListener rehearseListener = e -> { // rehearse button
-//            manager.rehearse(); // TODO - rehearse logic
-//            currentPlayerInfo();
-//        };
-
-
-//        ActionListener actListener = e -> { // act button
-//            boolean actSuccess = manager.act(); // act and get result
-//
-//            // Get the player's location
-//            int[] playerPosition = manager.getCurrentPlayer().getPosition(); // get player position
-//
-//            // Create a JLabel for the message
-//            JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
-//            messageLabel.setFont(new Font("Serif", Font.BOLD, 50)); // set font and size
-//            messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
-//            messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
-//
-//            // Add the label to your layeredPane or main panel
-//            layeredPane.add(messageLabel, JLayeredPane.POPUP_LAYER); // add message to layered pane
-//
-//            // Create a Timer
-//            int delay = 100; // delay
-//            int totalDuration = 2000; // total duration
-//
-//            ActionListener taskPerformer = new ActionListener() { // fade out the message
-//
-//                int trigger = 0; // trigger counter
-//                public void actionPerformed(ActionEvent evt) { // action to perform
-//                    float opacity = 1.0f - ((float) trigger * delay / totalDuration); // calculate opacity
-//                    // Set the opacity
-//                    messageLabel.setForeground(new Color(
-//                            messageLabel.getForeground().getRed() / 255f,
-//                            messageLabel.getForeground().getGreen() / 255f,
-//                            messageLabel.getForeground().getBlue() / 255f,
-//                            opacity));
-//                    trigger++; // increment trigger counter
-//                    if (trigger * delay >= totalDuration) { // stop the timer when total delay is reached
-//                        ((Timer)evt.getSource()).stop();
-//                        layeredPane.remove(messageLabel); // remove the message
-//                        layeredPane.repaint(); // repaint the layered pane
-//                    }
-//                }
-//            };
-//
-//            // Start the timer
-//            new Timer(delay, taskPerformer).start(); // start the timer
-//
-//            if(actSuccess){ // if the act was successful
-//                clearTakes(); // clear the shot counters
-//                showTakes(); // update the shot counters
-//            }
-//            currentPlayerInfo(); // update player stats
-//        };
-
-
-//        ActionListener upgradeListener = e -> { // upgrade button
-//            Area area = new Area(0, 0, 0, 0); // dummy area - remove
-//            Upgrade upgrade = new Upgrade(0, "c", 0, area); // dummy upgrade - remove
-//            manager.upgrade(upgrade, "$"); // TODO - upgrade logic
-//            currentPlayerInfo();
-//        };
-
-
-//        ActionListener endTurnListener = e -> { // end turn button
-//            manager.endTurn();
-//            currentPlayerInfo();
-//        };
-
-
         // create buttons and add to respective panels
         this.btn_move  = createButton("Move", buttonSize, 100, 0, moveListener());
         this.btn_role  = createButton("Take Role", buttonSize, 100, 0, takeRoleListener());
@@ -220,6 +119,7 @@ public class Game {
         statsPanel.add(playerCredits);
         statsPanel.add(playerChips);
     }
+
 
     private ActionListener moveListener() {
         return e -> {
@@ -269,7 +169,7 @@ public class Game {
 
             // Create a JLabel for the message
             JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
-            messageLabel.setFont(new Font("Serif", Font.BOLD, 50)); // set font and size
+            messageLabel.setFont(new Font("Serif", Font.BOLD, 30)); // set font and size
             messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
             messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
 
