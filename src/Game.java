@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Game {
     private GameManager manager;
@@ -169,7 +170,7 @@ public class Game {
 
             // Create a JLabel for the message
             JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
-            messageLabel.setFont(new Font("Serif", Font.BOLD, 30)); // set font and size
+            messageLabel.setFont(new Font("Serif", Font.BOLD, 25)); // set font and size
             messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
             messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
 
@@ -212,6 +213,7 @@ public class Game {
         };
     }
 
+
     private ActionListener upgradeListener() {
         return e -> {
             // Get available upgrades and player's current money
@@ -219,86 +221,101 @@ public class Game {
             int playerDollars = manager.getCurrentPlayer().getDollars();
             int playerCredits = manager.getCurrentPlayer().getCredits();
 
-            // Create the dialog and set a grid layout
+            // Create the dialog and set a grid bag layout
             JDialog dialog = new JDialog();
-            dialog.setLayout(new GridLayout(0, 1));
+            GridBagLayout layout = new GridBagLayout();
+            dialog.setLayout(layout);
 
-            // Create a button group for the rank radio buttons
-            ButtonGroup rankGroup = new ButtonGroup();
+            GridBagConstraints constraints = new GridBagConstraints(); // Create constraints for the layout
 
-            // Create a map to hold the button groups for the currency radio buttons
-            Map<Integer, ButtonGroup> currencyGroups = new HashMap<>();
+            // Create a button group for all buttons
+            ButtonGroup group = new ButtonGroup();
+
+            // Create an AtomicInteger to be used as an index in the forEach loop
+            AtomicInteger i = new AtomicInteger();
 
             // Iterate through each available upgrade
-            availableUpgrades.forEach((rank, currency) -> {
-                JRadioButton rankButton = new JRadioButton("Rank " + rank);
-                rankButton.setActionCommand(String.valueOf(rank));
-                rankGroup.add(rankButton);
-                dialog.add(rankButton);
+            availableUpgrades.forEach((rank, options) -> { // Iterate through each rank and its options
+                constraints.gridy = i.getAndIncrement(); // Set the y position to the current index
+                ImageIcon icon = getImage("/resources/images/tokens/w" + rank + ".png"); // Get the rank icon
+                JLabel rankLabel = new JLabel(icon); // Create a label for the rank icon
+                constraints.gridx = 0; // Set the x position to 0
+                dialog.add(rankLabel, constraints); // Add the rank icon to the dialog
 
-                ButtonGroup currencyGroup = new ButtonGroup();
-                currencyGroups.put(rank, currencyGroup);
-
-                for (String option : currency) {
-                    String[] parts = option.split(" ");
-                    int price = Integer.parseInt(parts[0]);
+                for (String option : options) { // Iterate through each option
+                    String[] parts = option.split(" "); // Split the option into its price and currency
+                    int price = Integer.parseInt(parts[0]); // Get the price
 
                     // Only enable the radio button if the player can afford the upgrade
                     boolean canAfford = parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
 
-                    JRadioButton currencyButton = new JRadioButton(parts[0] + " " + parts[1]);
-                    currencyButton.setEnabled(canAfford);
-                    currencyButton.setActionCommand(parts[1]);
-                    currencyGroup.add(currencyButton);
-                    dialog.add(currencyButton);
+                    JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]); // Create a radio button for the currency
+                    currencyButton.setEnabled(canAfford); // Enable the radio button if the player can afford the upgrade
+                    currencyButton.setActionCommand(rank + " " + parts[1]); // Set the action command to the rank and currency
+                    group.add(currencyButton); // Add the radio button to the group
+                    if (parts[1].equals("dollars")) { // If the currency is dollars
+                        constraints.gridx = 1; // Set the x position to 1
+                    } else { // If the currency is credits
+                        constraints.gridx = 2; // Set the x position to 2
+                    }
+                    dialog.add(currencyButton, constraints); // Add the radio button to the dialog
                 }
 
-                // Only enable the rank radio button if the player can afford any of the upgrade options
-                boolean canAffordAny = currency.stream().anyMatch(option -> {
-                    String[] parts = option.split(" ");
-                    int price = Integer.parseInt(parts[0]);
-                    return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
+                // Only enable the rank label if the player can afford any of the upgrade options
+                boolean canAffordAny = options.stream().anyMatch(option -> {
+                    String[] parts = option.split(" "); // Split the option into its price and currency
+                    int price = Integer.parseInt(parts[0]); // Get the price
+                    return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price; // Check if the player can afford the option
                 });
-                rankButton.setEnabled(canAffordAny);
+                rankLabel.setEnabled(canAffordAny); // Enable the rank label if the player can afford any of the options
             });
+
+            constraints.gridy = availableUpgrades.size(); // Set the y position to the number of available upgrades
+            constraints.gridx = 0; // Set the x position to 0
+            constraints.gridwidth = 1; // Set the grid width to 1
 
             // Create a button to confirm the upgrade
             JButton confirmButton = new JButton("Confirm Upgrade");
-            confirmButton.addActionListener(a -> {
-                String rankStr = rankGroup.getSelection().getActionCommand();
-                String currency = currencyGroups.get(Integer.parseInt(rankStr)).getSelection().getActionCommand();
+            // Create a button to cancel the upgrade
+            JButton cancelButton = new JButton("Cancel");
+
+            dialog.add(confirmButton, constraints); // Add the confirm button
+            constraints.gridx = 2; // Set the x position to 2
+            dialog.add(cancelButton, constraints); // Add the cancel button
+
+            confirmButton.addActionListener(a -> { // Add an action listener to the confirm button
+                String actionCommand = group.getSelection().getActionCommand(); // Get the selected upgrade
+                String[] parts = actionCommand.split(" "); // Split the upgrade into its rank and currency
+                String rankStr = parts[0]; // Get the selected rank
+                String currency = parts[1]; // Get the selected currency
 
                 // Get the selected upgrade
                 Upgrade selectedUpgrade = null;
-                for (Upgrade upgrade : ((CastingOffice) manager.getCurrentPlayer().getLocation()).getUpgrades()) {
-                    if (upgrade.getRank() == Integer.parseInt(rankStr) && upgrade.getCurrency().equals(currency)) {
-                        selectedUpgrade = upgrade;
+                for (Upgrade upgrade : ((CastingOffice) manager.getCurrentPlayer().getLocation()).getUpgrades()) { // Iterate through each upgrade
+                    if (upgrade.getRank() == Integer.parseInt(rankStr) && upgrade.getCurrency().equals(currency)) { // If the upgrade matches the selected rank and currency
+                        selectedUpgrade = upgrade; // Set the selected upgrade
                         break;
                     }
                 }
 
                 // Perform the upgrade
-                if (selectedUpgrade != null) {
-                    manager.upgrade(selectedUpgrade, currency);
+                if (selectedUpgrade != null) { // If the upgrade is valid
+                    manager.upgrade(selectedUpgrade, currency); // Perform the upgrade
                     dialog.dispose(); // Close the dialog
                     currentPlayerInfo(); // Update player stats
-                    showTokens();
+                    showTokens(); // Update player tokens
                 }
             });
-            dialog.add(confirmButton);
 
-            // Create a button to cancel the upgrade
-            JButton cancelButton = new JButton("Cancel");
             cancelButton.addActionListener(a -> dialog.dispose());
-            dialog.add(cancelButton);
 
             // Set the dialog properties
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.pack();
-            dialog.setVisible(true);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
+            dialog.setSize(400, 400); // Set the size of the dialog
+            dialog.setLocationRelativeTo(null); // Center the dialog
+            dialog.setVisible(true); // Show the dialog
         };
     }
-
 
 
     private ActionListener endTurnListener() {

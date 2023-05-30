@@ -422,16 +422,15 @@ public class GameManager {
             List<Upgrade> upgrades = office.getUpgrades();
 
             for (Upgrade upgrade : upgrades) {
-                if (upgrade.getRank() > rank) {
-                    String options = upgrade.getPrice() + " " + upgrade.getCurrency();
 
-                    if(availableUpgrades.containsKey(upgrade.getRank())) {
-                        availableUpgrades.get(upgrade.getRank()).add(options);
-                    } else {
-                        List<String> newUpgrade = new ArrayList<>();
-                        newUpgrade.add(options);
-                        availableUpgrades.put(upgrade.getRank(), newUpgrade);
-                    }
+                String options = upgrade.getPrice() + " " + upgrade.getCurrency();
+
+                if(availableUpgrades.containsKey(upgrade.getRank())) {
+                    availableUpgrades.get(upgrade.getRank()).add(options);
+                } else {
+                    List<String> newUpgrade = new ArrayList<>();
+                    newUpgrade.add(options);
+                    availableUpgrades.put(upgrade.getRank(), newUpgrade);
                 }
             }
         }
