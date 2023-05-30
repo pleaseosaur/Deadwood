@@ -305,6 +305,7 @@ public class Game {
         return e -> {
             manager.endTurn();
             currentPlayerInfo();
+            showTokens();
         };
     }
 
