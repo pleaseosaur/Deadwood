@@ -282,6 +282,7 @@ public class Game {
                     manager.upgrade(selectedUpgrade, currency);
                     dialog.dispose(); // Close the dialog
                     currentPlayerInfo(); // Update player stats
+                    showTokens();
                 }
             });
             dialog.add(confirmButton);
