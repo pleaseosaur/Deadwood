@@ -167,7 +167,7 @@ public class GameManager {
         }
 
         if(onCardPlayers.size() > 0) { // if there are on card players
-            wrapBonus(onCardPlayers, offCardPlayers, onCardRoles); // roll for wrap bonuses
+            wrapBonus(onCardPlayers, offCardPlayers); // roll for wrap bonuses
         }
 
         for(Player player : allPlayers) { // for each player
@@ -190,8 +190,9 @@ public class GameManager {
     }
 
     // wrapBonus: rolls for wrap bonuses if players are on card
-    public void wrapBonus(List<Player> onCardPlayers, List<Player> offCardPlayers, List<Role> onCardRoles) {
+    public void wrapBonus(List<Player> onCardPlayers, List<Player> offCardPlayers) {
         Card card = ((Set) currentPlayer.getLocation()).getScene();
+        List<Role> onCardRoles = new ArrayList<>(card.getRoles());
         List<Integer> results = dice.wrapRoll(card.getBudget()); // roll number of dice equal to budget
         Map<Role, Integer> distribution = new HashMap<>(); // map of roles to results
 
@@ -257,8 +258,7 @@ public class GameManager {
         this.currentPlayer = player;
     }
 
-    
-    // setStartingLocation: sets all players to starting location
+
     public void resetPlayers() {
         int startingX = 991 + 10; // starting x coordinate
         int startingY = 248 + 80; // starting y coordinate
