@@ -243,13 +243,14 @@ public class Game {
                 constraints.gridx = 0; // Set the x position to 0
                 dialog.add(rankLabel, constraints); // Add the rank icon to the dialog
 
+                boolean canUpgrade = rank > manager.getCurrentPlayer().getRank();
                 for (String option : options) { // Iterate through each option
                     String[] parts = option.split(" "); // Split the option into its price and currency
                     int price = Integer.parseInt(parts[0]); // Get the price
 
                     // Only enable the radio button if rank > player rank and the player can afford the upgrade
                     boolean canAfford = parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
-                    boolean canUpgrade = rank > manager.getCurrentPlayer().getRank();
+
 
                     JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]); // Create a radio button for the currency
                     currencyButton.setEnabled(canAfford && canUpgrade); // Enable the radio button if the player can afford the upgrade
@@ -269,7 +270,7 @@ public class Game {
                     int price = Integer.parseInt(parts[0]); // Get the price
                     return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price; // Check if the player can afford the option
                 });
-                rankLabel.setEnabled(canAffordAny); // Enable the rank label if the player can afford any of the options
+                rankLabel.setEnabled(canAffordAny && canUpgrade); // Enable the rank label if the player can afford any of the options
             });
 
             constraints.gridy = availableUpgrades.size(); // Set the y position to the number of available upgrades
