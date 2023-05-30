@@ -22,7 +22,7 @@ public class SetupGame {
 
     public Map<String, Map<Integer, String>> setTokens() {
         Map<String, Map<Integer, String>> tokens = new HashMap<>();
-        List<String> colors = Arrays.asList("b", "c", "g", "o", "p", "r", "v", "w", "y");
+        List<String> colors = Arrays.asList("b", "c", "g", "o", "p", "r", "v", "y");
         String prefix = "/resources/images/tokens/";
 
         for(String color : colors) {
@@ -40,7 +40,7 @@ public class SetupGame {
     // getters and setters
     public List<Player> setPlayers(int numPlayers) {
 
-        String[] colors = {"b", "c", "g", "o", "p", "r", "v", "y", "w"};
+        String[] colors = {"b", "c", "g", "o", "p", "r", "v", "y"};
         List<Player> players = new ArrayList<>();
 
         int rank = 1;
