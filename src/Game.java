@@ -207,10 +207,10 @@ public class Game {
             if(actSuccess){ // if the act was successful
                 clearTakes(); // clear the shot counters
                 showTakes(); // update the shot counters
-
             }
             currentPlayerInfo(); // update player stats
             showCards(); // update player cards
+            showTokens();
         };
     }
 
@@ -247,11 +247,12 @@ public class Game {
                     String[] parts = option.split(" "); // Split the option into its price and currency
                     int price = Integer.parseInt(parts[0]); // Get the price
 
-                    // Only enable the radio button if the player can afford the upgrade
+                    // Only enable the radio button if rank > player rank and the player can afford the upgrade
                     boolean canAfford = parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
+                    boolean canUpgrade = rank > manager.getCurrentPlayer().getRank();
 
                     JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]); // Create a radio button for the currency
-                    currencyButton.setEnabled(canAfford); // Enable the radio button if the player can afford the upgrade
+                    currencyButton.setEnabled(canAfford && canUpgrade); // Enable the radio button if the player can afford the upgrade
                     currencyButton.setActionCommand(rank + " " + parts[1]); // Set the action command to the rank and currency
                     group.add(currencyButton); // Add the radio button to the group
                     if (parts[1].equals("dollars")) { // If the currency is dollars
@@ -312,7 +313,7 @@ public class Game {
 
             // Set the dialog properties
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
-            dialog.setSize(300, 300); // Set the size of the dialog
+            dialog.setSize(350, 350); // Set the size of the dialog
             dialog.setLocationRelativeTo(null); // Center the dialog
             dialog.setVisible(true); // Show the dialog
         };
