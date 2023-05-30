@@ -55,15 +55,9 @@ public class SetupGame {
             rank = 2;
         }
 
-        int startingX = 991 + 10;
-        int startingY = 248 + 80;
-
         for(int i = 1; i <= numPlayers; i++) {
-            int currentX = startingX + 45 * ((i - 1) % 4);
-            int currentY = startingY + 45 * ((i - 1) / 4);
-        
             String playerName = "Player " + i;
-            Player player = new Player(playerName, rank, credits, dollars, colors[i - 1], currentX, currentY);
+            Player player = new Player(playerName, rank, credits, dollars, colors[i - 1]);
             players.add(player);
         }
 

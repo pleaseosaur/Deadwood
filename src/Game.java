@@ -207,6 +207,7 @@ public class Game {
             if(actSuccess){ // if the act was successful
                 clearTakes(); // clear the shot counters
                 showTakes(); // update the shot counters
+
             }
             currentPlayerInfo(); // update player stats
             showCards(); // update player cards
@@ -311,7 +312,7 @@ public class Game {
 
             // Set the dialog properties
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
-            dialog.setSize(400, 400); // Set the size of the dialog
+            dialog.setSize(300, 300); // Set the size of the dialog
             dialog.setLocationRelativeTo(null); // Center the dialog
             dialog.setVisible(true); // Show the dialog
         };

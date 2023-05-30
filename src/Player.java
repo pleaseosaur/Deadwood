@@ -18,7 +18,7 @@ public class Player {
 
 
     // constructor
-    public Player(String name, int rank, int credits, int dollars, String color, int playerX, int playerY){
+    public Player(String name, int rank, int credits, int dollars, String color){
         setName(name);
         setRank(rank);
         setCredits(credits);
@@ -31,7 +31,6 @@ public class Player {
         setHasActed(false);
         setHasRehearsed(false);
         setHasTakenRole(false);
-        setPosition(playerX, playerY);
     }
 
 

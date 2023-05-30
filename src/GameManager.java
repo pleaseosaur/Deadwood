@@ -103,8 +103,7 @@ public class GameManager {
         int budget = set.getScene().getBudget(); // get budget
 
         int diceResult = dice.rollDie(); // roll die
-
-        System.out.println("\nBudget is "+budget+".");
+        
         System.out.print("You rolled a "+diceResult+". ");
 
         diceResult += currentPlayer.getPracticeChips(); // add practice chips
@@ -113,13 +112,8 @@ public class GameManager {
         boolean isSuccess = false;
         if(diceResult >= budget){ // acting success
             isSuccess = true;
-
-            // TODO -- move to UI for GUI implementation
-            int takesNum = set.getCurrentTakeIndex()+1;
-            System.out.println((set.getTakes().size()-takesNum)+" takes remaining.");
-
+            
             set.decrementTakes(); // decrement takes
-
         }
         
         //payout
@@ -181,10 +175,18 @@ public class GameManager {
             player.resetPracticeChips(); // reset practice chips for all players
         }
         // decrement Open Scenes
-        board.setOpenScenes(board.getOpenScenes()-1);
-        if (board.getOpenScenes() == 1) {
+        setOpenScenes(getOpenScenes()-1);
+        if (getOpenScenes() == 1) {
             endDay();
         }
+    }
+
+    public int getOpenScenes() {
+        return board.getOpenScenes();
+    }
+
+    public void setOpenScenes(int num) {
+        board.setOpenScenes(num);
     }
 
     // wrapBonus: rolls for wrap bonuses if players are on card
@@ -255,9 +257,17 @@ public class GameManager {
         this.currentPlayer = player;
     }
 
+    
     // setStartingLocation: sets all players to starting location
     public void resetPlayers() {
+        int startingX = 991 + 10; // starting x coordinate
+        int startingY = 248 + 80; // starting y coordinate
+
+        int counter = 0; // counter for player number
         for (Player player : getPlayers()) {
+            int currentX = startingX + 45 * (counter % 4); // current x coordinate
+            int currentY = startingY + 45 * (counter / 4); // current y coordinate
+
             player.setLocation(board.getLocation("Trailer")); // set all players to trailer
             player.setHasActed(false); // reset player actions
             player.setHasMoved(false);
@@ -265,6 +275,10 @@ public class GameManager {
             player.setHasTakenRole(false);
             player.setHasUpgraded(false);
             player.setRole(); // remove role from all players
+            player.resetPracticeChips(); // reset practice chips for all players
+            player.setPosition(currentX, currentY); // return players to starting positions
+
+            counter++; // increment counter
         }
     }
 
@@ -280,10 +294,12 @@ public class GameManager {
         }
     }
 
+    
     public Player getCurrentPlayer() {
         return this.currentPlayer;
     }
 
+    
     public void setDays(int n) {
         this.days = n;
     }
@@ -291,26 +307,31 @@ public class GameManager {
         return this.days;
     }
 
+    
     // endDay: checks if day is over and resets players and roles
     public void endDay() {
         if(board.checkEndDay()) {
             if(!checkEndGame()){
                 resetPlayers();
                 resetRoles();
-                board.setOpenScenes(10);
+                setOpenScenes(10);
                 board.dealCards(); // deal cards
+                decrementDay();
             }
         }
     }
 
+    
     public void decrementDay() {
         setDays(getDays() - 1);
     }
 
+    
     private boolean checkEndGame() {
         return getDays() == 1; // TODO -- decrements before checking -- change in GUI implementation
     }
 
+    
     // scoreGame: tallies scores and returns list of winners
     public LinkedList<String> scoreGame() {
         // tally scores when endgame is triggered
@@ -380,8 +401,7 @@ public class GameManager {
         return availableLocations;
     }
 
-
-    // getAvailableRoles: makes list of roles available for taking
+    
     public Map<String, String> getAvailableRoles() {
 
         Location playerLocation = currentPlayer.getLocation();
@@ -413,10 +433,10 @@ public class GameManager {
         return availableRoles;
     }
 
-    // getAvailableUpgrades: makes list of upgrades available for taking
+    
     public Map<Integer, List<String>> getAvailableUpgrades() {
+        
         Map<Integer, List<String>> availableUpgrades = new HashMap<>();
-        int rank = currentPlayer.getRank();
 
         if(currentPlayer.getLocation() instanceof CastingOffice office) {
             List<Upgrade> upgrades = office.getUpgrades();
@@ -434,17 +454,17 @@ public class GameManager {
                 }
             }
         }
-        if(availableUpgrades.size() == 0) {
-            availableUpgrades.put(0, List.of("No upgrades available."));
-        }
+        
         return availableUpgrades;
     }
 
+    
     // calls displayBoard method in Board class
     public void displayBoard() {
         board.displayBoard();
     }
 
+    
     public Map<Card, List<Integer>> getCards() {
         Collection<Location> locations = board.getAllLocations().values();
         Map<Card, List<Integer>> cards = new HashMap<>();
@@ -463,6 +483,7 @@ public class GameManager {
         return cards;
     }
 
+    
     public Map<Take, List<Integer>> getTakes() {
         Collection<Location> locations = board.getAllLocations().values();
         Map<Take, List<Integer>> takes = new HashMap<>();
@@ -483,6 +504,7 @@ public class GameManager {
         return takes;
     }
 
+    
     public Map<String, int[]> getTokens() {
         Map<String, int[]> pathmap = new HashMap<>();
 
