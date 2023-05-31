@@ -374,9 +374,10 @@ public class Game {
 
 
     private ActionListener rehearseListener() {
-        return e -> { // TODO - rehearse logic
-            manager.rehearse(); // rehearse
-            currentPlayerInfo(); // update player stats
+        return e -> {
+          manager.rehearse(); // rehearse
+          displayFadingMessage("+1 Practice Chips", Color.GREEN); // display message
+          currentPlayerInfo(); // update player stats
         };
     }
 
@@ -385,49 +386,16 @@ public class Game {
         return e -> {
             boolean actSuccess = manager.act(); // act and get result
 
-            // Get the player's location
-            int[] playerPosition = manager.getCurrentPlayer().getPosition(); // get player position
+            String message = actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"; // determine message
+            Color color = actSuccess ? Color.GREEN : Color.RED; // determine color
 
-            // Create a JLabel for the message
-            JLabel messageLabel = new JLabel(actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"); // message to display
-            messageLabel.setFont(new Font("Serif", Font.BOLD, 25)); // set font and size
-            messageLabel.setForeground(actSuccess ? Color.GREEN : Color.RED); // set color
-            messageLabel.setBounds(playerPosition[0], playerPosition[1], 200, 50); // message position = player position
-
-            // Add the label to your layeredPane or main panel
-            layeredPane.add(messageLabel, JLayeredPane.POPUP_LAYER); // add message to layered pane
-
-            // Create a Timer
-            int delay = 100; // delay
-            int totalDuration = 2000; // total duration
-
-            ActionListener taskPerformer = new ActionListener() { // fade out the message
-
-                int trigger = 0; // trigger counter
-                public void actionPerformed(ActionEvent evt) { // action to perform
-                    float opacity = 1.0f - ((float) trigger * delay / totalDuration); // calculate opacity
-                    // Set the opacity
-                    messageLabel.setForeground(new Color(
-                            messageLabel.getForeground().getRed() / 255f,
-                            messageLabel.getForeground().getGreen() / 255f,
-                            messageLabel.getForeground().getBlue() / 255f,
-                            opacity));
-                    trigger++; // increment trigger counter
-                    if (trigger * delay >= totalDuration) { // stop the timer when total delay is reached
-                        ((Timer)evt.getSource()).stop();
-                        layeredPane.remove(messageLabel); // remove the message
-                        layeredPane.repaint(); // repaint the layered pane
-                    }
-                }
-            };
-
-            // Start the timer
-            new Timer(delay, taskPerformer).start(); // start the timer
+            displayFadingMessage(message, color); // display message
 
             if(actSuccess){ // if the act was successful
                 clearTakes(); // clear the shot counters
                 showTakes(); // update the shot counters
             }
+
             currentPlayerInfo(); // update player stats
             showCards(); // update player cards
             showTokens(); // update player tokens
@@ -606,5 +574,44 @@ public class Game {
         } while(newName.isEmpty()); // Loop until the user enters a name
 
         return newName;
+    }
+
+
+    private void displayFadingMessage(String message, Color color) {
+
+        JLabel messageLabel = new JLabel(message); // Create a label with the given message
+        messageLabel.setFont(new Font("Serif", Font.BOLD, 25)); // Set the font of the label
+        messageLabel.setForeground(color); // Set the color of the label
+
+        GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
+        c.gridx = 0; // Column 0
+        c.gridy = 5; // Row 5 (below playerChips stat)
+        c.anchor = GridBagConstraints.WEST; // Align the label to the left
+
+        statsPanel.add(messageLabel, c); // Add the label to statsPanel
+        statsPanel.revalidate(); // Revalidate the panel to update the layout
+
+        int delay = 100; // Delay between each iteration
+        int totalDuration = 1000; // Total duration of the animation
+
+        ActionListener taskPerformer = new ActionListener() { // Create a new action listener
+            int trigger = 0; // The number of times the timer has triggered
+            public void actionPerformed(ActionEvent evt) { // Called each time the timer triggers
+                float opacity = 1.0f - ((float) trigger * delay / totalDuration); // Calculate the opacity of the label
+                messageLabel.setForeground(new Color(
+                        messageLabel.getForeground().getRed() / 255f,
+                        messageLabel.getForeground().getGreen() / 255f,
+                        messageLabel.getForeground().getBlue() / 255f,
+                        opacity)); // Set the opacity of the label
+                trigger++; // Increment the trigger
+                if (trigger * delay >= totalDuration) { // If the animation is complete
+                    ((Timer)evt.getSource()).stop(); // Stop the timer
+                    statsPanel.remove(messageLabel); // Remove the label from statsPanel
+                    statsPanel.revalidate(); // Revalidate the panel to update the layout
+                }
+            }
+        };
+
+        new Timer(delay, taskPerformer).start(); // Start the timer
     }
 }
