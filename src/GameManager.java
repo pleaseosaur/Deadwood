@@ -66,12 +66,12 @@ public class GameManager {
         for(Role role : allRoles) {
             if(!role.isTaken()) {
                 if(role.getName().equals(r)) {
-                    int x = role.getArea().getX();
-                    int y = role.getArea().getY();
+                    int x = role.getArea().getX() + 3;
+                    int y = role.getArea().getY() + 3;
 
                     if(onCardRoles.contains(role)) {
-                        x += set.getArea().getX();
-                        y += set.getArea().getY();
+                        x += set.getArea().getX() - 3;
+                        y += set.getArea().getY() - 3;
                     }
 
                     currentPlayer.setPosition(x, y);
