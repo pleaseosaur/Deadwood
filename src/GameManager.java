@@ -294,6 +294,14 @@ public class GameManager {
         }
     }
 
+    public void resetTakes() {
+        for(Location location : board.getAllLocations().values()) {
+            if(location instanceof Set set) { // if location is a set
+                set.resetTakes();
+            }
+        }
+    }
+
     
     public Player getCurrentPlayer() {
         return this.currentPlayer;
@@ -317,6 +325,7 @@ public class GameManager {
                 setOpenScenes(10);
                 board.dealCards(); // deal cards
                 decrementDay();
+                resetTakes();
             }
         }
     }

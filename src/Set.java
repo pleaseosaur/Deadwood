@@ -1,11 +1,13 @@
 // imports
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Set extends Location {
     // fields
     private Card card;
     private List<Take> takes;
+    private final List<Take> backupTakes;
     private List<Role> roles;
     private Take currentTake;
 
@@ -16,6 +18,7 @@ public class Set extends Location {
         this.takes = takes;
         this.roles = roles;
         currentTake = this.takes.get(0);
+        this.backupTakes = new ArrayList<>(takes);
     }
 
 
@@ -37,6 +40,11 @@ public class Set extends Location {
         takes.remove(takes.size()-1);
         boolean wrap = takes.isEmpty();
         getScene().setWrap(wrap);
+    }
+
+    public void resetTakes() {
+        takes.clear();
+        takes.addAll(backupTakes);
     }
 
     public List<Role> getRoles(){

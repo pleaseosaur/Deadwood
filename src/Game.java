@@ -103,24 +103,6 @@ public class Game {
     }
 
 
-//    private void setupStats() {
-//        statsPanel = new JPanel(); // Create a panel for player stats
-//        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
-//        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
-//
-//        playerName = createLabel("", 35, 15); // Create a label to display the player's name
-//        playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
-//        playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
-//        playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
-//        playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
-//
-//        statsPanel.add(playerName); // Add the stats label to the stats panel
-//        statsPanel.add(playerRank);
-//        statsPanel.add(playerDollars);
-//        statsPanel.add(playerCredits);
-//        statsPanel.add(playerChips);
-//    }
-
     private void setupStats() {
         statsPanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for statsPanel
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
@@ -243,7 +225,7 @@ public class Game {
             }
             currentPlayerInfo(); // update player stats
             showCards(); // update player cards
-            showTokens();
+            showTokens(); // update player tokens
         };
     }
 
@@ -348,7 +330,7 @@ public class Game {
             // Set the dialog properties
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
             dialog.setSize(350, 350); // Set the size of the dialog
-            dialog.setLocationRelativeTo(null); // Center the dialog
+            dialog.setLocationRelativeTo(layeredPane); // Center the dialog
             dialog.setVisible(true); // Show the dialog
         };
     }
