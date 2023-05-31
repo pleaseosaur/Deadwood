@@ -32,7 +32,7 @@ public class GameManager {
 
 
     // player actions
-    public void move(String location) { // TODO - add logic to update player x, y coordinates
+    public void move(String location) {
         Location destination = currentPlayer.getLocation().getNeighbor(location);
         int x = destination.getArea().getX();
         int y = destination.getArea().getY();

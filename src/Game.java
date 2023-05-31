@@ -532,8 +532,12 @@ public class Game {
             System.out.println("Starting game with " + input + " players!");
             this.manager = new GameManager(input); // Create a new game manager with the selected number of players
         } else { // 'Cancel' selected or dialog closed
-            System.out.println("Game Setup Cancelled!");
-            // exit
+            int cancel = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
+            if(cancel == JOptionPane.YES_OPTION) {
+                System.exit(0); // Exit the program
+            } else {
+                selectPlayers(); // Show the player selection dialog again
+            }
         }
     }
 
