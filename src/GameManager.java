@@ -448,6 +448,7 @@ public class GameManager {
         player.setName(name);
     }
 
+
     public void endTurn() {
         int currentIndex = getPlayers().indexOf(currentPlayer); // get index of current player
         int nextIndex = (currentIndex + 1) % getPlayers().size(); // get index of next player
@@ -472,27 +473,25 @@ public class GameManager {
         List<String> availableActions = new ArrayList<>();
         Location currentLocation = currentPlayer.getLocation();
 
-        if(currentPlayer.getRole() == null) {
-            if(!currentPlayer.getHasMoved() && !currentPlayer.getHasActed()) {
+        if(!playerHasRole()) {
+            if(playerCanMove()) {
                 availableActions.add("Move");
             }
-            if(currentLocation instanceof Set) {
-                if(!((Set) currentLocation).getScene().isWrapped()) { //TODO - may need to add additional check for hasTakenRole
-                    availableActions.add("Take Role");
-                }
+            if(playerCanTakeRole(currentLocation)) {
+                availableActions.add("Take Role");
             }
         }
 
-        if(currentPlayer.getRole() != null) {
-            if(!currentPlayer.getHasActed() && !currentPlayer.getHasRehearsed() && !currentPlayer.getHasTakenRole()) {
+        if(playerHasRole()) {
+            if(playerCanAct()) {
                 availableActions.add("Act");
-                if(currentPlayer.getRole().isOnCard() && !currentPlayer.getHasRehearsed()) {
+                if(playerCanRehearse(currentLocation)) {
                     availableActions.add("Rehearse");
                 }
             }
         }
 
-        if(currentLocation instanceof CastingOffice) {
+        if(playerCanUpgrade(currentLocation)) {
             availableActions.add("Upgrade");
         }
 
@@ -681,7 +680,6 @@ public class GameManager {
     //********************************************************************************
     //                               Boolean Checks
     //********************************************************************************
-
     public boolean dayHasEnded() {
         return board.checkEndDay();
     }
@@ -689,5 +687,42 @@ public class GameManager {
 
     private boolean gameHasEnded() {
         return getDays() == 1; // TODO -- decrements before checking -- change in GUI implementation
+    }
+
+
+    private boolean playerHasRole() {
+        return currentPlayer.getRole() != null;
+    }
+
+
+    private boolean playerCanMove() {
+        return !currentPlayer.getHasMoved() && !currentPlayer.getHasActed();
+    }
+
+
+    private boolean playerCanTakeRole(Location currentLocation) {
+
+        if(currentLocation instanceof Set) {
+            //TODO - may need to add additional check for hasTakenRole
+            return !((Set) currentLocation).getScene().isWrapped() && !currentPlayer.getHasTakenRole();
+        }
+
+        return false;
+    }
+
+
+    private boolean playerCanAct() {
+        return !currentPlayer.getHasActed() && !currentPlayer.getHasRehearsed() && !currentPlayer.getHasTakenRole();
+    }
+
+
+    private boolean playerCanRehearse(Location currentLocation) {
+        int budget = ((Set) currentLocation).getScene().getBudget();
+        return currentPlayer.getRole().isOnCard() && !currentPlayer.getHasRehearsed() && !(currentPlayer.getPracticeChips() == budget-1);
+    }
+
+
+    private boolean playerCanUpgrade(Location currentLocation) {
+        return currentLocation instanceof CastingOffice;
     }
 }
