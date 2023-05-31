@@ -291,6 +291,7 @@ public class Game {
             constraints.gridy = availableUpgrades.size(); // Set the y position to the number of available upgrades
             constraints.gridx = 0; // Set the x position to 0
             constraints.gridwidth = 1; // Set the grid width to 1
+            constraints.insets = new Insets(20, 0, 0, 0); // Set the insets to 10, 0, 0, 0
 
             // Create a button to confirm the upgrade
             JButton confirmButton = new JButton("Confirm Upgrade");
@@ -328,6 +329,8 @@ public class Game {
             cancelButton.addActionListener(a -> dialog.dispose());
 
             // Set the dialog properties
+            dialog.setIconImage(getImage("/resources/images/tokens/w6.png").getImage()); // Set the icon of the dialog
+            dialog.setTitle("   Casting Office: Pay dollars OR credits to upgrade."); // Set the title of the dialog
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
             dialog.setSize(350, 350); // Set the size of the dialog
             dialog.setLocationRelativeTo(layeredPane); // Center the dialog
