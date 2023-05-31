@@ -585,7 +585,7 @@ public class Game {
 
         GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
         c.gridx = 0; // Column 0
-        c.gridy = 5; // Row 5 (below playerChips stat)
+        c.gridy = 20; // below playerChips stat
         c.anchor = GridBagConstraints.WEST; // Align the label to the left
 
         statsPanel.add(messageLabel, c); // Add the label to statsPanel
