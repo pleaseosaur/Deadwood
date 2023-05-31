@@ -29,7 +29,7 @@ public class Game {
         SwingUtilities.invokeLater(() -> new Game().GUI());
     }
 
-
+    // Initialize GUI and start game
     private void GUI() {
         // initialize frame, pane, and panels
         startDay();
@@ -46,6 +46,11 @@ public class Game {
     }
 
 
+
+
+    //********************************************************************************
+    //                              Game Setup Methods
+    //********************************************************************************
     private void startDay() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
         panel = new JPanel(); // Create a panel to hold all other components
@@ -136,6 +141,204 @@ public class Game {
     }
 
 
+    private void setupRightPanel() {
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.add(statsPanel, BorderLayout.NORTH);
+        rightPanel.add(buttonPanel, BorderLayout.CENTER);
+        panel.add(rightPanel, BorderLayout.EAST); // Add the right panel to the panel
+    }
+
+
+    private void setupBoard() {
+        layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
+
+        ImageIcon board = getImage("/resources/images/board.jpg"); // Create the board image
+        layeredPane.setPreferredSize(new Dimension(board.getIconWidth(), board.getIconHeight())); // Set the size of the game board
+
+        JLabel boardLabel = new JLabel(board); // Add the board image to a label
+        boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight()); // Set the size of the board label
+
+        layeredPane.add(boardLabel, Integer.valueOf(0)); // Add the board to the lowest layer
+
+        JScrollPane scrollPane = new JScrollPane(layeredPane); // Create a scroll pane to hold the layered pane
+
+        panel.add(scrollPane, BorderLayout.CENTER); // Add the layered pane to the panel
+    }
+
+
+    private void selectPlayers() {
+        // Player selection dialog
+        Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // Number of players choices
+        JComboBox<Integer> numPlayers = new JComboBox<>(choices); // Create a combo box for the number of players
+
+        Object[] message = {
+                "Please select the number of players:", numPlayers
+        };
+
+        Object[] options = { "Start Game", "Cancel" }; // Buttons for the dialog
+
+        int option = JOptionPane.showOptionDialog(null, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+        if (option == 0) { // 'Start Game' selected
+            Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
+            System.out.println("Starting game with " + input + " players!");
+            this.manager = new GameManager(input); // Create a new game manager with the selected number of players
+        } else { // 'Cancel' selected or dialog closed
+            int cancel = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
+            if(cancel == JOptionPane.YES_OPTION) {
+                System.exit(0); // Exit the program
+            } else {
+                selectPlayers(); // Show the player selection dialog again
+            }
+        }
+    }
+
+
+    private void renamePlayers() {
+        int renameOption = JOptionPane.showConfirmDialog(null, "Would you like to enter custom player names?", "Rename Players", JOptionPane.YES_NO_OPTION);
+        if(renameOption == JOptionPane.YES_OPTION) {
+            for(Player player : manager.getPlayers()) {
+                String name = renamePrompt(player.getName());
+                manager.renamePlayer(player, name);
+            }
+        }
+    }
+
+
+
+
+    //********************************************************************************
+    //                           Update & Display Methods
+    //********************************************************************************
+    private void currentPlayerInfo() {
+
+        Player currentPlayer = manager.getCurrentPlayer();
+        String color = currentPlayer.getColor();
+
+        switch (color) { // Set the color of the player name based on their color
+            case "b" -> playerName.setForeground(Color.BLUE);
+            case "c" -> playerName.setForeground(Color.CYAN);
+            case "g" -> playerName.setForeground(Color.GREEN);
+            case "o" -> playerName.setForeground(Color.ORANGE);
+            case "p" -> playerName.setForeground(Color.PINK);
+            case "r" -> playerName.setForeground(Color.RED);
+            case "v" -> playerName.setForeground(Color.MAGENTA);
+            case "w" -> playerName.setForeground(Color.WHITE);
+            case "y" -> playerName.setForeground(Color.YELLOW);
+        }
+
+        playerName.setText(currentPlayer.getName()); // Set the player name
+        playerRank.setText("Rank: " + currentPlayer.getRank()); // Set player rank
+        playerDollars.setText("Dollars: " + currentPlayer.getDollars()); // Set player dollars
+        playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
+        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
+
+        showActiveButtons(); // Show the buttons that the player can use
+    }
+
+
+    private void showActiveButtons() { // Show the buttons that the player can use
+        var availableActions = manager.getAvailableActions(); // Get the available actions for the player
+
+        // Set the style of the buttons based on the available actions
+        setButtonStyle(btn_move, availableActions.contains("Move"));
+        setButtonStyle(btn_role, availableActions.contains("Take Role") && !manager.getAvailableRoles().isEmpty());
+        setButtonStyle(btn_rehearse, availableActions.contains("Rehearse"));
+        setButtonStyle(btn_act, availableActions.contains("Act"));
+        setButtonStyle(btn_upgrade, availableActions.contains("Upgrade"));
+        setButtonStyle(btn_end, availableActions.contains("End Turn"));
+    }
+
+
+    private void setButtonStyle(JPanel button, boolean enabled) { // Set the style of the button based on the enabled status
+        button.setEnabled(enabled); // Set the enabled status of the button
+        for(Component c : button.getComponents()) { // Iterate through the components of the button
+            c.setEnabled(enabled); // Set the enabled status of the component
+            if(c instanceof JLabel label) { // If the component is a label
+                label.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the label
+            } else if(c instanceof JButton btn) { // If the component is a button
+                btn.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the button
+            }
+        }
+    }
+
+
+    private void showCards() {
+        // Remove all components in layer 2
+        Component[] components = layeredPane.getComponentsInLayer(2);
+        for (Component c : components) {
+            layeredPane.remove(c);
+        }
+        // Refresh the layeredPane after removals
+        layeredPane.revalidate();
+        layeredPane.repaint();
+
+        manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
+            String path = card.getImg(); // Get the path to the card image
+            int x = area.get(0); // Get the x coordinate of the card
+            int y = area.get(1); // Get the y coordinate of the card
+            int w = area.get(2); // Get the width of the card
+            int h = area.get(3); // Get the height of the card
+            ImageIcon cardImage = getImage(path); // Create an image icon from the path
+            JLabel cardLabel = new JLabel(cardImage); // Add the image icon to a label
+            cardLabel.setBounds(x, y, w, h); // Set the size of the card label
+            layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
+        });
+    }
+
+
+    private void showTakes() {
+        manager.getTakes().forEach((take, area) -> { // Iterate through the takes and their areas
+            String path = take.getImg(); // Get the path to the take image
+            int x = area.get(0); // Get the x coordinate of the take
+            int y = area.get(1); // Get the y coordinate of the take
+            int w = area.get(2); // Get the width of the take
+            int h = area.get(3); // Get the height of the take
+            ImageIcon takeImage = getImage(path); // Create an image icon from the path
+            JLabel takeLabel = new JLabel(takeImage); // Add the image icon to a label
+            takeLabel.setBounds(x, y, w, h); // Set the size of the take label
+            layeredPane.add(takeLabel, Integer.valueOf(1)); // Add the take to the second layer
+
+            takeLabels.put(take, takeLabel); // Stores take label into Map
+        });
+    }
+
+
+    private void clearTakes() {
+        for (JLabel takeLabel : takeLabels.values()) { // Iterate through the take labels
+            layeredPane.remove(takeLabel); // Remove the take label from the layered pane
+        }
+        takeLabels.clear(); // Clear the take labels map
+        layeredPane.repaint(); // Repaint the layered pane
+    }
+
+
+    private void showTokens() {
+        // Remove all components in layer 3
+        Component[] components = layeredPane.getComponentsInLayer(3);
+        for (Component c : components) {
+            layeredPane.remove(c);
+        }
+        // Refresh the layeredPane after removals
+        layeredPane.revalidate();
+        layeredPane.repaint();
+
+        manager.getTokens().forEach((path, position) -> { // Iterate through the tokens and their positions
+            int x = position[0]; // Get the x coordinate of the token
+            int y = position[1]; // Get the y coordinate of the token
+            ImageIcon token = getImage(path); // Create an image icon from the path
+            JLabel tokenLabel = new JLabel(token); // Add the image icon to a label
+            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight()); // Set the size of the token label
+            layeredPane.add(tokenLabel, Integer.valueOf(3)); // Add the token to the third layer
+        });
+    }
+
+
+
+
+    //********************************************************************************
+    //                               Action Listeners
+    //********************************************************************************
     private ActionListener moveListener() {
         return e -> {
             JPopupMenu locationMenu = new JPopupMenu(); // Create a popup menu for the locations
@@ -350,135 +553,16 @@ public class Game {
     }
 
 
-    private void setupRightPanel() {
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.add(statsPanel, BorderLayout.NORTH);
-        rightPanel.add(buttonPanel, BorderLayout.CENTER);
-        panel.add(rightPanel, BorderLayout.EAST); // Add the right panel to the panel
-    }
 
 
-    private void setupBoard() {
-        layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
-
-        ImageIcon board = getImage("/resources/images/board.jpg"); // Create the board image
-        layeredPane.setPreferredSize(new Dimension(board.getIconWidth(), board.getIconHeight())); // Set the size of the game board
-
-        JLabel boardLabel = new JLabel(board); // Add the board image to a label
-        boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight()); // Set the size of the board label
-
-        layeredPane.add(boardLabel, Integer.valueOf(0)); // Add the board to the lowest layer
-
-        JScrollPane scrollPane = new JScrollPane(layeredPane); // Create a scroll pane to hold the layered pane
-
-        panel.add(scrollPane, BorderLayout.CENTER); // Add the layered pane to the panel
-    }
-
-
-    private void showCards() {
-        // Remove all components in layer 2
-        Component[] components = layeredPane.getComponentsInLayer(2);
-        for (Component c : components) {
-            layeredPane.remove(c);
-        }
-        // Refresh the layeredPane after removals
-        layeredPane.revalidate();
-        layeredPane.repaint();
-
-        manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
-            String path = card.getImg(); // Get the path to the card image
-            int x = area.get(0); // Get the x coordinate of the card
-            int y = area.get(1); // Get the y coordinate of the card
-            int w = area.get(2); // Get the width of the card
-            int h = area.get(3); // Get the height of the card
-            ImageIcon cardImage = getImage(path); // Create an image icon from the path
-            JLabel cardLabel = new JLabel(cardImage); // Add the image icon to a label
-            cardLabel.setBounds(x, y, w, h); // Set the size of the card label
-            layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
-        });
-    }
-
-
-
-    private void showTakes() {
-        manager.getTakes().forEach((take, area) -> { // Iterate through the takes and their areas
-            String path = take.getImg(); // Get the path to the take image
-            int x = area.get(0); // Get the x coordinate of the take
-            int y = area.get(1); // Get the y coordinate of the take
-            int w = area.get(2); // Get the width of the take
-            int h = area.get(3); // Get the height of the take
-            ImageIcon takeImage = getImage(path); // Create an image icon from the path
-            JLabel takeLabel = new JLabel(takeImage); // Add the image icon to a label
-            takeLabel.setBounds(x, y, w, h); // Set the size of the take label
-            layeredPane.add(takeLabel, Integer.valueOf(1)); // Add the take to the second layer
-
-            takeLabels.put(take, takeLabel); // Stores take label into Map
-        });
-    }
-
-    private void clearTakes() {
-        for (JLabel takeLabel : takeLabels.values()) { // Iterate through the take labels
-            layeredPane.remove(takeLabel); // Remove the take label from the layered pane
-        }
-        takeLabels.clear(); // Clear the take labels map
-        layeredPane.repaint(); // Repaint the layered pane
-    }
-
-
-    private void showTokens() {
-        // Remove all components in layer 3
-        Component[] components = layeredPane.getComponentsInLayer(3);
-        for (Component c : components) {
-            layeredPane.remove(c);
-        }
-        // Refresh the layeredPane after removals
-        layeredPane.revalidate();
-        layeredPane.repaint();
-
-        manager.getTokens().forEach((path, position) -> { // Iterate through the tokens and their positions
-            int x = position[0]; // Get the x coordinate of the token
-            int y = position[1]; // Get the y coordinate of the token
-            ImageIcon token = getImage(path); // Create an image icon from the path
-            JLabel tokenLabel = new JLabel(token); // Add the image icon to a label
-            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight()); // Set the size of the token label
-            layeredPane.add(tokenLabel, Integer.valueOf(3)); // Add the token to the third layer
-        });
-    }
-
-
-
-    private void currentPlayerInfo() {
-
-        Player currentPlayer = manager.getCurrentPlayer();
-        String color = currentPlayer.getColor();
-
-        switch (color) { // Set the color of the player name based on their color
-            case "b" -> playerName.setForeground(Color.BLUE);
-            case "c" -> playerName.setForeground(Color.CYAN);
-            case "g" -> playerName.setForeground(Color.GREEN);
-            case "o" -> playerName.setForeground(Color.ORANGE);
-            case "p" -> playerName.setForeground(Color.PINK);
-            case "r" -> playerName.setForeground(Color.RED);
-            case "v" -> playerName.setForeground(Color.MAGENTA);
-            case "w" -> playerName.setForeground(Color.WHITE);
-            case "y" -> playerName.setForeground(Color.YELLOW);
-        }
-
-        playerName.setText(currentPlayer.getName()); // Set the player name
-        playerRank.setText("Rank: " + currentPlayer.getRank()); // Set player rank
-        playerDollars.setText("Dollars: " + currentPlayer.getDollars()); // Set player dollars
-        playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
-        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
-
-        showActiveButtons(); // Show the buttons that the player can use
-    }
-
-
-    private JLabel createLabel(String text, int fontSize, int spacing) { // Create a label with the given text, font size, and spacing
-        JLabel label = new JLabel(text); // Create a label with the given text
-        label.setFont(new Font("Serif", Font.BOLD, fontSize)); // Set the font of the label
-        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0)); // Set the border of the label
-        return label;
+    //********************************************************************************
+    //                               Helper Methods
+    //********************************************************************************
+    private ImageIcon getImage(String path) {
+        URL url = getClass().getResource(path);
+        ImageIcon image = new ImageIcon(url);
+        image.setImage(image.getImage().getScaledInstance(image.getIconWidth(), image.getIconHeight(), Image.SCALE_DEFAULT));
+        return image;
     }
 
 
@@ -493,85 +577,34 @@ public class Game {
         return buttonPanel;
     }
 
-    private void showActiveButtons() { // Show the buttons that the player can use
-        var availableActions = manager.getAvailableActions(); // Get the available actions for the player
 
-        // Set the style of the buttons based on the available actions
-        setButtonStyle(btn_move, availableActions.contains("Move"));
-        setButtonStyle(btn_role, availableActions.contains("Take Role") && !manager.getAvailableRoles().isEmpty());
-        setButtonStyle(btn_rehearse, availableActions.contains("Rehearse"));
-        setButtonStyle(btn_act, availableActions.contains("Act"));
-        setButtonStyle(btn_upgrade, availableActions.contains("Upgrade"));
-        setButtonStyle(btn_end, availableActions.contains("End Turn"));
-    }
-
-    private void setButtonStyle(JPanel button, boolean enabled) { // Set the style of the button based on the enabled status
-        button.setEnabled(enabled); // Set the enabled status of the button
-        for(Component c : button.getComponents()) { // Iterate through the components of the button
-            c.setEnabled(enabled); // Set the enabled status of the component
-            if(c instanceof JLabel label) { // If the component is a label
-                label.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the label
-            } else if(c instanceof JButton btn) { // If the component is a button
-                btn.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the button
-            }
-        }
-    }
-
-
-    private void selectPlayers() {
-        // Player selection dialog
-        Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // Number of players choices
-        JComboBox<Integer> numPlayers = new JComboBox<>(choices); // Create a combo box for the number of players
-
-        Object[] message = {
-                "Please select the number of players:", numPlayers
-        };
-
-        Object[] options = { "Start Game", "Cancel" }; // Buttons for the dialog
-
-        int option = JOptionPane.showOptionDialog(null, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-
-        if (option == 0) { // 'Start Game' selected
-            Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
-            System.out.println("Starting game with " + input + " players!");
-            this.manager = new GameManager(input); // Create a new game manager with the selected number of players
-        } else { // 'Cancel' selected or dialog closed
-            int cancel = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
-            if(cancel == JOptionPane.YES_OPTION) {
-                System.exit(0); // Exit the program
-            } else {
-                selectPlayers(); // Show the player selection dialog again
-            }
-        }
-    }
-
-
-    private void renamePlayers() {
-        int renameOption = JOptionPane.showConfirmDialog(null, "Would you like to enter custom player names?", "Rename Players", JOptionPane.YES_NO_OPTION);
-        if(renameOption == JOptionPane.YES_OPTION) {
-            for(Player player : manager.getPlayers()) {
-                String name = renamePrompt(player.getName());
-                manager.renamePlayer(player, name);
-            }
-        }
+    private JLabel createLabel(String text, int fontSize, int spacing) { // Create a label with the given text, font size, and spacing
+        JLabel label = new JLabel(text); // Create a label with the given text
+        label.setFont(new Font("Serif", Font.BOLD, fontSize)); // Set the font of the label
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0)); // Set the border of the label
+        return label;
     }
 
 
     private String renamePrompt(String name) {
-        JTextField input = new JTextField();
+        JTextField input = new JTextField(); // Create a text field for the user to enter a name
         final JComponent[] inputs = new JComponent[] {
-                new JLabel("Please enter a name for " + name + ": "),
-                input
+                new JLabel("Please enter a name for " + name + ": "), // Create a label to prompt the user to enter a name
+                input // Add the text field to the dialog
         };
-        JOptionPane.showMessageDialog(null, inputs, "Rename Player", JOptionPane.PLAIN_MESSAGE);
-        return input.getText();
-    }
 
+        String newName = ""; // The new name to be returned
+        do {
+            JOptionPane optionPane = new JOptionPane(inputs, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION); // Create a new option pane with the inputs
+            JDialog prompt = optionPane.createDialog("Rename Player"); // Create a new dialog with the option pane
 
-    private ImageIcon getImage(String path) {
-        URL url = getClass().getResource(path);
-        ImageIcon image = new ImageIcon(url);
-        image.setImage(image.getImage().getScaledInstance(image.getIconWidth(), image.getIconHeight(), Image.SCALE_DEFAULT));
-        return image;
+            // Use a timer to request focus after the dialog is visible
+            new Timer(100, e -> input.requestFocusInWindow()).start(); // Request focus on the text field
+
+            prompt.setVisible(true); // Show the dialog
+            newName = input.getText().trim(); // trim() is used to remove leading and trailing spaces
+        } while(newName.isEmpty()); // Loop until the user enters a name
+
+        return newName;
     }
 }
