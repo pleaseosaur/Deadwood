@@ -36,36 +36,126 @@ public class GameManager {
         Location destination = currentPlayer.getLocation().getNeighbor(location);
         int x = destination.getArea().getX();
         int y = destination.getArea().getY();
-
-        if(destination instanceof CastingOffice || destination instanceof Trailer) {
-            x += 10;
-            y += 80;
-        }
-        else {
-            y += 120;
-        }
-
         int counter = 0;
-        for(Player anotherPlayer : players) {
-            if(!anotherPlayer.equals(currentPlayer)) {
 
-                if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
-                    x += 45;
-                    counter++;
+        switch(location) {
+            case "Casting Office", "Trailer" -> {
+                x += 10;
+                y += 80;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
 
-                    if(counter == 4) {
-                        x -= 170;
-                        y += 45;
-                        counter = 0;
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x += 45;
+                            counter++;
+
+                            if(counter == 4) {
+                                x -= 180;
+                                y += 45;
+                                counter = 0;
+                            }
+                        }
                     }
                 }
             }
+
+            case "Hotel", "Church", "Bank", "Saloon", "General Store", "Train Station" -> {
+                y += 120;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
+
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x += 45;
+                            counter++;
+
+                            if(counter == 4) {
+                                x -= 180;
+                                y = destination.getArea().getY();
+                                counter = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            case "Secret Hideout" -> {
+                y += 120;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
+
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x += 45;
+                        }
+                    }
+                }
+            }
+
+            case "Ranch" -> {
+                y += 120;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
+
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x += 45;
+                            counter++;
+
+                            if(counter == 3) {
+                                x -= 120;
+                                y += 45;
+                                counter = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            case "Jail" -> {
+                x += 120;
+                y += 120;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
+
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x -= 45;
+                            counter++;
+
+                            if(counter == 4) {
+                                x += 180;
+                                y += 50;
+                                counter = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+            default -> {
+                y += 120;
+                for(Player anotherPlayer : players) {
+                    if(!anotherPlayer.equals(currentPlayer)) {
+
+                        if(anotherPlayer.getLocation().equals(destination) && !anotherPlayer.hasRole()) {
+                            x += 45;
+                            counter++;
+
+                            if(counter == 4) {
+                                x -= 180;
+                                y += 45;
+                                counter = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+
         }
 
         currentPlayer.setLocation(destination);
         currentPlayer.setPosition(x, y);
         currentPlayer.setHasMoved(true);
     }
+
 
     public void upgrade(Upgrade upgrade, String currency) {
         int rank = upgrade.getRank();
