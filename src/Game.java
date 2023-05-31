@@ -103,10 +103,33 @@ public class Game {
     }
 
 
+//    private void setupStats() {
+//        statsPanel = new JPanel(); // Create a panel for player stats
+//        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
+//        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
+//
+//        playerName = createLabel("", 35, 15); // Create a label to display the player's name
+//        playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
+//        playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
+//        playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
+//        playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
+//
+//        statsPanel.add(playerName); // Add the stats label to the stats panel
+//        statsPanel.add(playerRank);
+//        statsPanel.add(playerDollars);
+//        statsPanel.add(playerCredits);
+//        statsPanel.add(playerChips);
+//    }
+
     private void setupStats() {
-        statsPanel = new JPanel(); // Create a panel for player stats
-        statsPanel.setLayout(new BoxLayout(statsPanel, BoxLayout.Y_AXIS)); // Use BoxLayout for statsPanel
+        statsPanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for statsPanel
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
+
+        GridBagConstraints c = new GridBagConstraints(); // constraints object
+
+        c.gridx = 0; // Column 0
+        c.fill = GridBagConstraints.HORIZONTAL; // fill horizontal space
+        c.weightx = 1; // take up all available horizontal space
 
         playerName = createLabel("", 35, 15); // Create a label to display the player's name
         playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
@@ -114,12 +137,22 @@ public class Game {
         playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
         playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
 
-        statsPanel.add(playerName); // Add the stats label to the stats panel
-        statsPanel.add(playerRank);
-        statsPanel.add(playerDollars);
-        statsPanel.add(playerCredits);
-        statsPanel.add(playerChips);
+        c.gridy = 0; // Row 0
+        statsPanel.add(playerName, c); // Add player name to the stats panel
+
+        c.gridy = 1; // Row 1
+        statsPanel.add(playerRank, c); // Add player rank to the stats panel
+
+        c.gridy = 2; // Row 2
+        statsPanel.add(playerDollars, c); // Add player dollars to the stats panel
+
+        c.gridy = 3; // Row 3
+        statsPanel.add(playerCredits, c); // Add player credits to the stats panel
+
+        c.gridy = 4; // Row 4
+        statsPanel.add(playerChips, c); // Add player practice chips to the stats panel
     }
+
 
 
     private ActionListener moveListener() {
