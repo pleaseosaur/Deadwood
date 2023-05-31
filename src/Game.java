@@ -136,7 +136,6 @@ public class Game {
     }
 
 
-
     private ActionListener moveListener() {
         return e -> {
             JPopupMenu locationMenu = new JPopupMenu(); // Create a popup menu for the locations
@@ -152,6 +151,7 @@ public class Game {
             locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2); // Show the location menu
         };
     }
+
 
     private ActionListener takeRoleListener() {
         return e -> {
@@ -169,12 +169,14 @@ public class Game {
         };
     }
 
+
     private ActionListener rehearseListener() {
         return e -> { // TODO - rehearse logic
             manager.rehearse(); // rehearse
             currentPlayerInfo(); // update player stats
         };
     }
+
 
     private ActionListener actListener() {
         return e -> {
@@ -367,7 +369,9 @@ public class Game {
 
         layeredPane.add(boardLabel, Integer.valueOf(0)); // Add the board to the lowest layer
 
-        panel.add(layeredPane, BorderLayout.CENTER); // Add the layered pane to the panel
+        JScrollPane scrollPane = new JScrollPane(layeredPane); // Create a scroll pane to hold the layered pane
+
+        panel.add(scrollPane, BorderLayout.CENTER); // Add the layered pane to the panel
     }
 
 

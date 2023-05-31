@@ -34,10 +34,11 @@ public class GameManager {
     // player actions
     public void move(String location) {
         Location destination = currentPlayer.getLocation().getNeighbor(location);
+
         int x = destination.getArea().getX();
         int y = destination.getArea().getY();
-        int counter = 0;
 
+        int counter = 0;
         switch(location) {
             case "Casting Office", "Trailer" -> {
                 x += 10;
@@ -151,9 +152,9 @@ public class GameManager {
 
         }
 
-        currentPlayer.setLocation(destination);
-        currentPlayer.setPosition(x, y);
-        currentPlayer.setHasMoved(true);
+        currentPlayer.setLocation(destination); // set player location
+        currentPlayer.setPosition(x, y); // update player position
+        currentPlayer.setHasMoved(true); // set hasMoved flag
     }
 
 
