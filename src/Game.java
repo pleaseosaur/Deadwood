@@ -1,12 +1,10 @@
 /*
  * Author: Peter Hafner and Andrew Cox
- * Date: 16 May 2023
- * Purpose: Main
+ * Date: 1 June 2023
+ * Purpose: Main game class
  */
 
 // imports
-
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +15,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Game {
+    // Fields
     private GameManager manager;
     private JFrame frame;
     private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
@@ -24,7 +23,7 @@ public class Game {
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips, daysRemain;
     private Map<Take, JLabel> takeLabels = new HashMap<>();
 
-
+    // Main method
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Game().GUI());
     }
@@ -144,8 +143,8 @@ public class Game {
         c.gridy = 4; // Row 4
         statsPanel.add(playerChips, c); // Add player practice chips to the stats panel
 
-        c.gridy = 6; // Row 6
-        statsPanel.add(daysRemain, c);
+        c.gridy = 5; // Row 5
+        statsPanel.add(daysRemain, c); // Add days remaining to the stats panel
     }
 
     private void setupMessagePanel() {
