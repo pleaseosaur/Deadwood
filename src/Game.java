@@ -145,7 +145,7 @@ public class Game {
 
     private void setupMessagePanel() {
         messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
-        messagePanel.setPreferredSize(new Dimension(300, 200)); // Set the size of the message panel
+        messagePanel.setPreferredSize(new Dimension(300, 300)); // Set the size of the message panel
         messagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
         messagePanel.setOpaque(false); // Make the panel transparent
     }
@@ -596,11 +596,11 @@ public class Game {
 
         GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
         c.gridx = 0; // Column 0
-        c.gridy = 20; // below playerChips stat
-        c.anchor = GridBagConstraints.WEST; // Align the label to the left
+        c.gridy = 0; // Row 0
+        c.anchor = GridBagConstraints.CENTER; // Align the label to the left
 
-        statsPanel.add(messageLabel, c); // Add the label to statsPanel
-        statsPanel.revalidate(); // Revalidate the panel to update the layout
+        messagePanel.add(messageLabel, c); // Add the label to statsPanel
+        messagePanel.revalidate(); // Revalidate the panel to update the layout
 
         int delay = 100; // Delay between each iteration
         int totalDuration = 1000; // Total duration of the animation
@@ -617,8 +617,9 @@ public class Game {
                 trigger++; // Increment the trigger
                 if (trigger * delay >= totalDuration) { // If the animation is complete
                     ((Timer)evt.getSource()).stop(); // Stop the timer
-                    statsPanel.remove(messageLabel); // Remove the label from statsPanel
-                    statsPanel.revalidate(); // Revalidate the panel to update the layout
+                    messagePanel.remove(messageLabel); // Remove the label from statsPanel
+                    messagePanel.revalidate(); // Revalidate the panel to update the layout
+                    messagePanel.repaint();
                 }
             }
         };
