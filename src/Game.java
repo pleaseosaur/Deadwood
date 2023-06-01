@@ -21,7 +21,7 @@ public class Game {
     private JFrame frame;
     private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
     private JLayeredPane layeredPane;
-    private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips;
+    private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips, daysRemain;
     private Map<Take, JLabel> takeLabels = new HashMap<>();
 
 
@@ -127,6 +127,7 @@ public class Game {
         playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
         playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
         playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
+        daysRemain = createLabel("", 15, 10); // Create a label to display the day
 
         c.gridy = 0; // Row 0
         statsPanel.add(playerName, c); // Add player name to the stats panel
@@ -142,6 +143,9 @@ public class Game {
 
         c.gridy = 4; // Row 4
         statsPanel.add(playerChips, c); // Add player practice chips to the stats panel
+
+        c.gridy = 6; // Row 6
+        statsPanel.add(daysRemain, c);
     }
 
     private void setupMessagePanel() {
@@ -244,6 +248,7 @@ public class Game {
         playerDollars.setText("Dollars: " + currentPlayer.getDollars()); // Set player dollars
         playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
         playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
+        daysRemain.setText("Days Remaining: " + manager.getDays()); // Set days remaining
 
         showActiveButtons(); // Show the buttons that the player can use
     }
