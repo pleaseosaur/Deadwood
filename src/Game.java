@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Game {
     private GameManager manager;
     private JFrame frame;
-    private JPanel panel, buttonPanel, statsPanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
+    private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
     private JLayeredPane layeredPane;
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips;
     private Map<Take, JLabel> takeLabels = new HashMap<>();
@@ -62,6 +62,9 @@ public class Game {
         // initialize the stats panel
         setupStats();
 
+        // initialize the message panel
+        setupMessagePanel();
+
         // Setup right panel to contain player stats and buttons
         setupRightPanel();
 
@@ -92,8 +95,8 @@ public class Game {
         topButtons.add(btn_move);
         topButtons.add(btn_role);
 
-        this.btn_rehearse = createButton("Rehearse", buttonSize, 10, 10, rehearseListener());
-        this.btn_act = createButton("Act", buttonSize, 10, 10, actListener());
+        this.btn_rehearse = createButton("Rehearse", buttonSize, 50, 50, rehearseListener());
+        this.btn_act = createButton("Act", buttonSize, 50, 50, actListener());
         middleButtons.add(btn_rehearse);
         middleButtons.add(btn_act);
 
@@ -140,11 +143,19 @@ public class Game {
         statsPanel.add(playerChips, c); // Add player practice chips to the stats panel
     }
 
+    private void setupMessagePanel() {
+        messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
+        messagePanel.setPreferredSize(new Dimension(300, 200)); // Set the size of the message panel
+        messagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
+        messagePanel.setOpaque(false); // Make the panel transparent
+    }
+
 
     private void setupRightPanel() {
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(statsPanel, BorderLayout.NORTH);
-        rightPanel.add(buttonPanel, BorderLayout.CENTER);
+        rightPanel.add(messagePanel, BorderLayout.CENTER); // Add the message panel to the right panel (top
+        rightPanel.add(buttonPanel, BorderLayout.SOUTH);
         panel.add(rightPanel, BorderLayout.EAST); // Add the right panel to the panel
     }
 
