@@ -53,6 +53,7 @@ public class Game {
     //********************************************************************************
     private void startDay() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
+        frame.setIconImage(getImage("/resources/images/dw_icon.jpg").getImage());
         panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
 
@@ -100,8 +101,8 @@ public class Game {
         middleButtons.add(btn_rehearse);
         middleButtons.add(btn_act);
 
-        this.btn_upgrade = createButton("Upgrade", buttonSize, 0, 200, upgradeListener());
-        this.btn_end = createButton("End Turn", buttonSize, 0, 200, endTurnListener());
+        this.btn_upgrade = createButton("Upgrade", buttonSize, 0, 100, upgradeListener());
+        this.btn_end = createButton("End Turn", buttonSize, 0, 100, endTurnListener());
         bottomButtons.add(btn_upgrade);
         bottomButtons.add(btn_end);
 
@@ -145,7 +146,7 @@ public class Game {
 
     private void setupMessagePanel() {
         messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
-        messagePanel.setPreferredSize(new Dimension(300, 300)); // Set the size of the message panel
+        messagePanel.setPreferredSize(new Dimension(300, 500)); // Set the size of the message panel
         messagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
         messagePanel.setOpaque(false); // Make the panel transparent
     }
@@ -393,26 +394,6 @@ public class Game {
     }
 
 
-//    private ActionListener actListener() {
-//        return e -> {
-//            int[] actSuccess = manager.act(); // act and get result
-//
-//            String message = actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"; // determine message
-//            Color color = actSuccess ? Color.GREEN : Color.RED; // determine color
-//
-//            displayFadingMessage(message, color); // display message
-//
-//            if(actSuccess[0] == 1){ // if the act was successful
-//                clearTakes(); // clear the shot counters
-//                showTakes(); // update the shot counters
-//            }
-//
-//            currentPlayerInfo(); // update player stats
-//            showCards(); // update player cards
-//            showTokens(); // update player tokens
-//        };
-//    }
-
     private ActionListener actListener() {
         return e -> {
             int[] actResult = manager.act(); // act and get result
@@ -627,13 +608,12 @@ public class Game {
         GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
         c.gridx = 0; // Column 0
         c.gridy = y; // Row 0
-//        c.anchor = GridBagConstraints.CENTER; // Align the label to the left
 
         messagePanel.add(messageLabel, c); // Add the label to statsPanel
         messagePanel.revalidate(); // Revalidate the panel to update the layout
 
         int delay = 100; // Delay between each iteration
-        int totalDuration = 1000; // Total duration of the animation
+        int totalDuration = 2000; // Total duration of the animation
 
         ActionListener taskPerformer = new ActionListener() { // Create a new action listener
             int trigger = 0; // The number of times the timer has triggered
