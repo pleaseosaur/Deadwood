@@ -681,7 +681,7 @@ public class GameManager {
 
 
     private boolean gameHasEnded() {
-        return getDays() == 0; // TODO -- decrements before checking -- change in GUI implementation
+        return getDays() == 0;
     }
 
 
