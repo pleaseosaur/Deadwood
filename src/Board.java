@@ -1,7 +1,5 @@
 // imports
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Board {
@@ -72,51 +70,4 @@ public class Board {
             }
         }
     }
-
-    public void displayBoard() {
-        List<String> printLines = new ArrayList<>();
-
-        int locationNameMax = 0;
-
-        for (Map.Entry<String, Location> entry : locations.entrySet()) {
-            String locationName = entry.getKey();
-            locationNameMax = Math.max(locationNameMax, locationName.length());
-        }
-
-        int max = 0;
-        for (Map.Entry<String, Location> entry : locations.entrySet()) {
-            String locationName = entry.getKey();
-            Location location = entry.getValue();
-            List<Location> neighbors = location.getNeighbors();
-
-            StringBuilder builder = new StringBuilder();
-
-            for (Location neighbor : neighbors) {
-                builder.append(neighbor.getName());
-                builder.append(", ");
-            }
-
-            if (builder.length() > 0) {
-                builder.setLength(builder.length() - 2);
-            }
-
-            int numDashes = locationNameMax - locationName.length() + 10;
-
-            String dashes = "-".repeat(numDashes);
-            String line = locationName + "  " + dashes + ">  " + builder;
-
-            printLines.add(line);
-            max = Math.max(max, line.length());
-        }
-
-        String borderLine = "*".repeat(max + 4);
-        System.out.println(borderLine);
-
-        for (String line : printLines) {
-            System.out.println("* " + line);
-        }
-
-        System.out.println(borderLine);
-    }
-
 }

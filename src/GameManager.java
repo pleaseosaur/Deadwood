@@ -345,14 +345,12 @@ public class GameManager {
         List<Player> allPlayers = new ArrayList<>(); // list of all players
         List<Player> onCardPlayers = new ArrayList<Player>(); // list of on card players
         List<Player> offCardPlayers = new ArrayList<Player>(); // list of off card players
-        List<Role> onCardRoles = new ArrayList<Role>(); // list of on card roles
 
         for(Player player : getPlayers()) { // for each player
             if(player.getLocation().equals(location)) { // if player is on current location
                 if(player.getRole() != null) {
                     if(player.getRole().isOnCard()) {
                         onCardPlayers.add(player); // add to on card players
-                        onCardRoles.add(player.getRole()); // add to on card roles
                         allPlayers.add(player); // add to all players
                     } else {
                         offCardPlayers.add(player); // add to off card players
@@ -373,7 +371,7 @@ public class GameManager {
         }
         // decrement Open Scenes
         setOpenScenes(getOpenScenes()-1);
-        if (getOpenScenes() == 1) {
+        if (dayHasEnded()) {
             endDay();
         }
 
