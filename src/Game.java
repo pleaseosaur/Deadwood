@@ -126,7 +126,7 @@ public class Game {
         playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
         playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
         playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
-        daysRemain = createLabel("", 15, 10); // Create a label to display the day
+        daysRemain = createLabel("", 12, 10); // Create a label to display the day
 
         c.gridy = 0; // Row 0
         statsPanel.add(playerName, c); // Add player name to the stats panel
@@ -238,7 +238,6 @@ public class Game {
             case "p" -> playerName.setForeground(Color.PINK);
             case "r" -> playerName.setForeground(Color.RED);
             case "v" -> playerName.setForeground(Color.MAGENTA);
-            case "w" -> playerName.setForeground(Color.WHITE);
             case "y" -> playerName.setForeground(Color.YELLOW);
         }
 
@@ -248,6 +247,7 @@ public class Game {
         playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
         playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
         daysRemain.setText("Days Remaining: " + manager.getDays()); // Set days remaining
+        daysRemain.setForeground(Color.GRAY);
 
         showActiveButtons(); // Show the buttons that the player can use
     }
