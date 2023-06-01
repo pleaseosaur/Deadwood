@@ -50,7 +50,7 @@ public class GameManager {
                 resetTakes();
             }
             else {
-                scoreGame();
+                scoreGame(); // TODO change this to output into GUI and end game
             }
         }
     }
@@ -681,7 +681,7 @@ public class GameManager {
 
 
     private boolean gameHasEnded() {
-        return getDays() == 1; // TODO -- decrements before checking -- change in GUI implementation
+        return getDays() == 0; // TODO -- decrements before checking -- change in GUI implementation
     }
 
 
