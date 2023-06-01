@@ -18,7 +18,7 @@ public class Dice {
 
     // rollDie: signifies one dice roll
     public int rollDie() {
-        return rand.nextInt(sides)+1+5;
+        return rand.nextInt(sides)+1;
     }
 
     // wrapRoll: loop to get all dice rolls for scene wrap
