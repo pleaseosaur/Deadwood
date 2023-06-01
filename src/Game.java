@@ -387,22 +387,52 @@ public class Game {
     private ActionListener rehearseListener() {
         return e -> {
           manager.rehearse(); // rehearse
-          displayFadingMessage("+1 Practice Chips", Color.GREEN); // display message
+          displayMessage("+1 Practice Chips", Color.GREEN, 150); // display message
           currentPlayerInfo(); // update player stats
         };
     }
 
 
+//    private ActionListener actListener() {
+//        return e -> {
+//            int[] actSuccess = manager.act(); // act and get result
+//
+//            String message = actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"; // determine message
+//            Color color = actSuccess ? Color.GREEN : Color.RED; // determine color
+//
+//            displayFadingMessage(message, color); // display message
+//
+//            if(actSuccess[0] == 1){ // if the act was successful
+//                clearTakes(); // clear the shot counters
+//                showTakes(); // update the shot counters
+//            }
+//
+//            currentPlayerInfo(); // update player stats
+//            showCards(); // update player cards
+//            showTokens(); // update player tokens
+//        };
+//    }
+
     private ActionListener actListener() {
         return e -> {
-            boolean actSuccess = manager.act(); // act and get result
+            int[] actResult = manager.act(); // act and get result
 
-            String message = actSuccess ? "ACT SUCCESS!" : "ACT FAILED!"; // determine message
-            Color color = actSuccess ? Color.GREEN : Color.RED; // determine color
+            // display rolled number
+            int diceResult = actResult[1];
 
-            displayFadingMessage(message, color); // display message
+            displayMessage("You rolled a: " + diceResult, Color.BLACK, 0);
 
-            if(actSuccess){ // if the act was successful
+            // display success or failure message
+            String message = actResult[0] == 1 ? "ACT SUCCESS!" : "ACT FAILED!";
+            Color color = actResult[0] == 1 ? Color.GREEN : Color.RED;
+            displayMessage(message, color, 35); // display message
+
+            // display bonus message
+            if(actResult[2] == 1){
+                displayMessage("You got a bonus!", Color.BLUE, 70);
+            }
+
+            if(actResult[0] == 1){ // if the act was successful
                 clearTakes(); // clear the shot counters
                 showTakes(); // update the shot counters
             }
@@ -588,7 +618,7 @@ public class Game {
     }
 
 
-    private void displayFadingMessage(String message, Color color) {
+    private void displayMessage(String message, Color color, int y) {
 
         JLabel messageLabel = new JLabel(message); // Create a label with the given message
         messageLabel.setFont(new Font("Serif", Font.BOLD, 25)); // Set the font of the label
@@ -596,8 +626,8 @@ public class Game {
 
         GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
         c.gridx = 0; // Column 0
-        c.gridy = 0; // Row 0
-        c.anchor = GridBagConstraints.CENTER; // Align the label to the left
+        c.gridy = y; // Row 0
+//        c.anchor = GridBagConstraints.CENTER; // Align the label to the left
 
         messagePanel.add(messageLabel, c); // Add the label to statsPanel
         messagePanel.revalidate(); // Revalidate the panel to update the layout

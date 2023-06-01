@@ -303,20 +303,17 @@ public class GameManager {
     }
 
 
-    public boolean act() {
+    public int[] act() {
         Set set = (Set) currentPlayer.getLocation(); // get current set
         int budget = set.getScene().getBudget(); // get budget
 
         int diceResult = dice.rollDie(); // roll die
-        
-        System.out.print("You rolled a "+diceResult+". ");
 
-        diceResult += currentPlayer.getPracticeChips(); // add practice chips
-        System.out.println("With practice chips, the result is "+diceResult+".");
+        int totalResult = diceResult + currentPlayer.getPracticeChips(); // add practice chips to result
 
-        boolean isSuccess = false;
-        if(diceResult >= budget){ // acting success
-            isSuccess = true;
+        int isSuccess = 0;
+        if(totalResult >= budget){ // acting success
+            isSuccess = 1;
             
             set.decrementTakes(); // decrement takes
         }
@@ -324,11 +321,13 @@ public class GameManager {
         //payout
         actPay(currentPlayer.getRole().isOnCard(), isSuccess);
         currentPlayer.setHasActed(true);
-        
+
+        int bonusRolled = 0;
         if(set.getScene().isWrapped()){
-            wrapScene();
+            bonusRolled = wrapScene();
         }
-        return isSuccess;
+
+        return new int[] {isSuccess, diceResult, bonusRolled};
     }
 
 
@@ -337,7 +336,9 @@ public class GameManager {
     //********************************************************************************
     //                               Payouts & Wrapping
     //********************************************************************************
-    public void wrapScene() {
+    public int wrapScene() {
+
+        int bonusRolled = 0;
 
         Location location = currentPlayer.getLocation();
 
@@ -363,6 +364,7 @@ public class GameManager {
 
         if(onCardPlayers.size() > 0) { // if there are on card players
             wrapBonus(onCardPlayers, offCardPlayers); // roll for wrap bonuses
+            bonusRolled = 1;
         }
 
         for(Player player : allPlayers) { // for each player
@@ -374,11 +376,13 @@ public class GameManager {
         if (getOpenScenes() == 1) {
             endDay();
         }
+
+        return bonusRolled;
     }
 
 
-    public void actPay(Boolean onCard, Boolean isSuccess){
-        if(isSuccess) {
+    public void actPay(Boolean onCard, int isSuccess){
+        if(isSuccess == 1) {
             if(onCard) { // if star
                 currentPlayer.addCredits(2); // add 2 credits
             } else { // if extra
