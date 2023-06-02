@@ -46,32 +46,12 @@ public class Game {
 
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e){
-                endGame();
-            }
-        });
-    }
-
-    private void endGame() {
-        LinkedList<String> winners = manager.scoreGame();
-        if(winners.size()==1){
-            System.out.println(winners.get(0)+" wins!");
-        } else {
-            for(int i = 0; i < winners.size()-1; i++) {
-                System.out.print(winners.get(i)+", ");
-            }
-            System.out.println("and "+winners.get(winners.size()-1)+" win!");
-        }
-        JFrame scoreFrame = new JFrame("Game Over");
-        scoreFrame.setSize(300, 300);
-        scoreFrame.setLocationRelativeTo(frame);
-
-        scoreFrame.setVisible(true);
-
-        // Close original frame
-        scoreFrame.addWindowListener(new WindowAdapter(){
-            public void windowClosing(WindowEvent e) {
-                frame.dispose();
-                System.exit(0);
+                int cancel = JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit? \nYour game will not be saved.", "Exit Game", JOptionPane.YES_NO_OPTION);
+                if(cancel == JOptionPane.YES_OPTION) {
+                    System.exit(0); // Exit the program
+                } else {
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
             }
         });
     }
@@ -233,7 +213,7 @@ public class Game {
             System.out.println("Starting game with " + input + " players!");
             this.manager = new GameManager(input); // Create a new game manager with the selected number of players
         } else { // 'Cancel' selected or dialog closed
-            int cancel = JOptionPane.showConfirmDialog(null, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
+            int cancel = JOptionPane.showConfirmDialog(frame, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
             if(cancel == JOptionPane.YES_OPTION) {
                 System.exit(0); // Exit the program
             } else {
@@ -485,7 +465,7 @@ public class Game {
             }
 
             if(actResult[4] == 1){ // if the game is over
-                JOptionPane.showMessageDialog(null, "The game is over!");
+                Map<String, Integer> playerScores = manager.scoreGame(); // get the player scores
             }
 
             currentPlayerInfo(); // update player stats
@@ -661,7 +641,7 @@ public class Game {
         String newName = ""; // The new name to be returned
         do {
             JOptionPane optionPane = new JOptionPane(inputs, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION); // Create a new option pane with the inputs
-            JDialog prompt = optionPane.createDialog("Rename Player"); // Create a new dialog with the option pane
+            JDialog prompt = optionPane.createDialog(layeredPane, "Rename Player"); // Create a new dialog with the option pane
 
             // Use a timer to request focus after the dialog is visible
             new Timer(100, e -> input.requestFocusInWindow()).start(); // Request focus on the text field

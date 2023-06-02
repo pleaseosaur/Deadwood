@@ -103,37 +103,37 @@ public class GameManager {
 
 
     // scoreGame: tallies scores and returns list of winners
-    public LinkedList<String> scoreGame() {
-        // tally scores when endgame is triggered
-        LinkedList<String> winners = new LinkedList<>();
-        int topScore = Integer.MIN_VALUE;
-
-        for(Player player : players) {
-            int score = player.getDollars() + player.getCredits() + (player.getRank()*5);
-            System.out.println(player.getName()+" has a score of "+score+".");
-            // update top score if higher
-            if(score > topScore) {
-                winners.clear();
-                winners.add(player.getName());
-                topScore = score;
-            } else if (score == topScore) {
-                winners.add(player.getName());
-            }
-        }
-
-        return winners;
-    }
+//    public LinkedList<String> scoreGame() {
+//        // tally scores when endgame is triggered
+//        LinkedList<String> winners = new LinkedList<>();
+//        int topScore = Integer.MIN_VALUE;
+//
+//        for(Player player : players) {
+//            int score = player.getDollars() + player.getCredits() + (player.getRank()*5);
+//            System.out.println(player.getName()+" has a score of "+score+".");
+//            // update top score if higher
+//            if(score > topScore) {
+//                winners.clear();
+//                winners.add(player.getName());
+//                topScore = score;
+//            } else if (score == topScore) {
+//                winners.add(player.getName());
+//            }
+//        }
+//
+//        return winners;
+//    }
 
     // scoreGame: tallies scores and returns map linking players and scores
-    // public Map<String, Integer> scoreGame() {
-    //     Map<String, Integer> scores = new LinkedHashMap<>();
-    //     for (Player player : players) {
-    //         int score = player.getDollars() + player.getCredits() + (player.getRank()*5);
-    //         scores.put(player.getName(), score);
-    //     }
+     public Map<String, Integer> scoreGame() {
+         Map<String, Integer> scores = new LinkedHashMap<>();
+         for (Player player : players) {
+             int score = player.getDollars() + player.getCredits() + (player.getRank()*5);
+             scores.put(player.getName(), score);
+         }
 
-    //     return scores;
-    // }
+         return scores;
+     }
 
 
 
