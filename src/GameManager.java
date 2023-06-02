@@ -39,7 +39,7 @@ public class GameManager {
     }
 
 
-    public void endDay() {
+    public int endDay() {
         if(dayHasEnded()) {
             if(!gameHasEnded()){
                 resetPlayers();
@@ -48,11 +48,11 @@ public class GameManager {
                 board.dealCards(); // deal cards
                 decrementDay();
                 resetTakes();
-            }
-            else {
-                scoreGame(); // TODO change this to output into GUI and end game
+            } else {
+                return 1;
             }
         }
+        return 0;
     }
 
 
@@ -336,12 +336,18 @@ public class GameManager {
         actPay(currentPlayer.getRole().isOnCard(), isSuccess);
         currentPlayer.setHasActed(true);
 
+        int[] wrapResults;
         int bonusRolled = 0;
+        int endDay = 0;
+        int endGame = 0;
         if(set.getScene().isWrapped()){
-            bonusRolled = wrapScene();
+            wrapResults = wrapScene();
+            bonusRolled = wrapResults[0];
+            endDay = wrapResults[1];
+            endGame = wrapResults[2];
         }
 
-        return new int[] {isSuccess, diceResult, bonusRolled};
+        return new int[] {isSuccess, diceResult, bonusRolled, endDay, endGame};
     }
 
 
@@ -350,9 +356,13 @@ public class GameManager {
     //********************************************************************************
     //                               Payouts & Wrapping
     //********************************************************************************
-    public int wrapScene() {
+    public int[] wrapScene() {
+
+        int[] results = new int[3];
 
         int bonusRolled = 0;
+        int endDay = 0;
+        int endGame = 0;
 
         Location location = currentPlayer.getLocation();
 
@@ -386,10 +396,15 @@ public class GameManager {
         // decrement Open Scenes
         setOpenScenes(getOpenScenes()-1);
         if (dayHasEnded()) {
-            endDay();
+            endGame = endDay();
+            endDay = 1;
         }
 
-        return bonusRolled;
+        results[0] = bonusRolled;
+        results[1] = endDay;
+        results[2] = endGame;
+
+        return results;
     }
 
 

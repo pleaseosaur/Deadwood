@@ -336,19 +336,19 @@ public class Game {
             JLabel cardLabel = new JLabel(scaledImage); // Add the image icon to a label
             cardLabel.setBounds(x, y, w, h); // Set the size of the card label
 
-            if(!Objects.equals(path, "/resources/images/cards/CardBack.jpg")) {
-                cardLabel.addMouseListener(new MouseAdapter() {
+            if(!Objects.equals(path, "/resources/images/cards/CardBack.jpg")) { // If the card is not the card back
+                cardLabel.addMouseListener(new MouseAdapter() { // Add a mouse listener to the card
 
-                    public void mouseEntered(MouseEvent e) {
-                        cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight());
+                    public void mouseEntered(MouseEvent e) { // When the mouse enters the card
+                        cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight()); // Set the size of the card label to the original size
                         cardLabel.setIcon(cardImage); // Set the card image to the original size
-                        layeredPane.setLayer(cardLabel, 7);
+                        layeredPane.setLayer(cardLabel, 7); // Set the card to the top layer
                     }
 
-                    public void mouseExited(MouseEvent e) {
-                        cardLabel.setBounds(x, y, w, h);
+                    public void mouseExited(MouseEvent e) { // When the mouse exits the card
+                        cardLabel.setBounds(x, y, w, h); // Set the size of the card label to the scaled size
                         cardLabel.setIcon(scaledImage); // Set the card image to the scaled size
-                        layeredPane.setLayer(cardLabel, 2);
+                        layeredPane.setLayer(cardLabel, 2); // Set the card back to the second layer
                     }
                 });
             }
@@ -477,6 +477,17 @@ public class Game {
                 showTakes(); // update the shot counters
             }
 
+            if(actResult[3] == 1){ // if the day is over
+                JOptionPane endDayMessage = new JOptionPane("A new day has begun!", JOptionPane.INFORMATION_MESSAGE); // create a new message
+                JDialog dialog = endDayMessage.createDialog(layeredPane, "End of Day"); // create a dialog
+                dialog.setVisible(true); // show the dialog
+
+            }
+
+            if(actResult[4] == 1){ // if the game is over
+                JOptionPane.showMessageDialog(null, "The game is over!");
+            }
+
             currentPlayerInfo(); // update player stats
             showCards(); // update player cards
             showTokens(); // update player tokens
@@ -496,10 +507,17 @@ public class Game {
             GridBagLayout layout = new GridBagLayout();
             dialog.setLayout(layout);
 
+            // Create a button to confirm the upgrade
+            JButton confirmButton = new JButton("Confirm Upgrade");
+            // Create a button to cancel the upgrade
+            JButton cancelButton = new JButton("Cancel");
+
             GridBagConstraints constraints = new GridBagConstraints(); // Create constraints for the layout
 
             // Create a button group for all buttons
             ButtonGroup group = new ButtonGroup();
+
+            confirmButton.setEnabled(false); // Disable the confirm button
 
             // Create an AtomicInteger to be used as an index in the forEach loop
             AtomicInteger i = new AtomicInteger();
@@ -522,6 +540,7 @@ public class Game {
 
 
                     JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]); // Create a radio button for the currency
+                    currencyButton.addItemListener(s -> confirmButton.setEnabled(currencyButton.isSelected())); // Enable the confirm button if the radio button is selected
                     currencyButton.setEnabled(canAfford && canUpgrade); // Enable the radio button if the player can afford the upgrade
                     currencyButton.setActionCommand(rank + " " + parts[1]); // Set the action command to the rank and currency
                     group.add(currencyButton); // Add the radio button to the group
@@ -546,11 +565,6 @@ public class Game {
             constraints.gridx = 0; // Set the x position to 0
             constraints.gridwidth = 1; // Set the grid width to 1
             constraints.insets = new Insets(20, 0, 0, 0); // Set the insets to 10, 0, 0, 0
-
-            // Create a button to confirm the upgrade
-            JButton confirmButton = new JButton("Confirm Upgrade");
-            // Create a button to cancel the upgrade
-            JButton cancelButton = new JButton("Cancel");
 
             dialog.add(confirmButton, constraints); // Add the confirm button
             constraints.gridx = 2; // Set the x position to 2
@@ -577,6 +591,8 @@ public class Game {
                     dialog.dispose(); // Close the dialog
                     currentPlayerInfo(); // Update player stats
                     showTokens(); // Update player tokens
+                } else { // If the upgrade is invalid
+                    JOptionPane.showMessageDialog(layeredPane, "Please select an upgrade"); // Show an error message
                 }
             });
 
