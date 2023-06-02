@@ -482,6 +482,9 @@ public class Game {
                 JOptionPane endGameMessage = new JOptionPane(scores, JOptionPane.INFORMATION_MESSAGE);
                 JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over");
                 dialog.setVisible(true);
+
+                // exit game
+                System.exit(0);
             }
 
             currentPlayerInfo(); // update player stats
