@@ -166,7 +166,7 @@ public class Game {
                 showStandingsPanel(statsPanel, standingsPanel);
             }
             public void mouseExited(MouseEvent e) {
-                standingsPanel.setVisible(false);
+                hideStandingsPanel(standingsPanel);
             }
         });
     }
@@ -203,6 +203,14 @@ public class Game {
         popup.setAlwaysOnTop(true);
         popup.setVisible(true);
     }
+    private void hideStandingsPanel(JPanel standingsPanel) {
+        Window window = SwingUtilities.getWindowAncestor(standingsPanel);
+        if (window instanceof JWindow) {
+            window.setVisible(false);
+            window.dispose();
+        }
+    }
+
     private void setupMessagePanel() {
         messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
         messagePanel.setPreferredSize(new Dimension(300, 500)); // Set the size of the message panel
