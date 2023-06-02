@@ -45,7 +45,6 @@ public class Game {
         showTakes(); // display shot counters on board
         showTokens(); // display player tokens on board
 
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e){
                 endGame();
@@ -57,12 +56,20 @@ public class Game {
         manager.scoreGame();
         JFrame scoreFrame = new JFrame("Game Over");
         scoreFrame.setSize(300, 300);
+
+        // Set window to open centered in monitor
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - scoreFrame.getWidth()) / 2;
+        int y = (screenSize.height - scoreFrame.getHeight()) / 2;
+        scoreFrame.setLocation(x, y);
+
         scoreFrame.setVisible(true);
 
         // Close original frame
         scoreFrame.addWindowListener(new WindowAdapter(){
             public void windowClosing(WindowEvent e) {
                 frame.dispose();
+                System.exit(0);
             }
         });
     }
@@ -96,7 +103,14 @@ public class Game {
 
         frame.add(panel); // Add the panel to the frame
         frame.setSize(1500, 1000); // Set the size of the frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Exit program when the frame is closed
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Do nothing on close, score will pop up and program will end when that window is closed.
+        
+        // Set window to open centered in monitor
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (screenSize.width - frame.getWidth()) / 2;
+        int y = (screenSize.height - frame.getHeight()) / 2;
+        frame.setLocation(x, y);
+
         frame.setVisible(true); // Make the frame visible
     }
 
