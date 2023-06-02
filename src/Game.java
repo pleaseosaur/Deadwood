@@ -7,10 +7,7 @@
 // imports
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.Map;
@@ -327,13 +324,32 @@ public class Game {
 
         manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
             String path = card.getImg(); // Get the path to the card image
+
             int x = area.get(0); // Get the x coordinate of the card
             int y = area.get(1); // Get the y coordinate of the card
             int w = area.get(2); // Get the width of the card
             int h = area.get(3); // Get the height of the card
+
             ImageIcon cardImage = getImage(path); // Create an image icon from the path
-            JLabel cardLabel = new JLabel(cardImage); // Add the image icon to a label
+            ImageIcon scaledImage = new ImageIcon(cardImage.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH)); // Scale the image icon to the card size
+            JLabel cardLabel = new JLabel(scaledImage); // Add the image icon to a label
             cardLabel.setBounds(x, y, w, h); // Set the size of the card label
+
+            cardLabel.addMouseListener(new MouseAdapter() {
+
+                public void mouseEntered(MouseEvent e) {
+                    cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight());
+                    cardLabel.setIcon(cardImage); // Set the card image to the original size
+                    layeredPane.setLayer(cardLabel, 7);
+                }
+
+                public void mouseExited(MouseEvent e) {
+                    cardLabel.setBounds(x, y, w, h);
+                    cardLabel.setIcon(scaledImage); // Set the card image to the scaled size
+                    layeredPane.setLayer(cardLabel, 2);
+                }
+            });
+
             layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
         });
     }
