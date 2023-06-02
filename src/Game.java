@@ -159,6 +159,9 @@ public class Game {
 
         c.gridy = 5; // Row 5
         statsPanel.add(daysRemain, c); // Add days remaining to the stats panel
+    
+        UIManager.put("ToolTip.background", statsPanel.getBackground());
+        statsPanel.setToolTipText("test string pls ignore"); // TODO add scoreboard here?
     }
 
     private void setupMessagePanel() {
