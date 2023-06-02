@@ -58,7 +58,7 @@ public class Board {
 
 
     public boolean checkEndDay(){
-        return getOpenScenes() == 9;
+        return getOpenScenes() == 1;
     }
 
 
