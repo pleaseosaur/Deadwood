@@ -6,14 +6,14 @@
 
 // imports
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Game {
     // Fields
@@ -458,7 +458,7 @@ public class Game {
             }
 
             if(actResult[3] == 1){ // if the day is over
-                JOptionPane endDayMessage = new JOptionPane("A new day has begun!", JOptionPane.INFORMATION_MESSAGE); // create a new message
+                JOptionPane endDayMessage = new JOptionPane("Scenes are wrapped and the day has ended!", JOptionPane.INFORMATION_MESSAGE); // create a new message
                 JDialog dialog = endDayMessage.createDialog(layeredPane, "End of Day"); // create a dialog
                 dialog.setVisible(true); // show the dialog
 
@@ -466,6 +466,22 @@ public class Game {
 
             if(actResult[4] == 1){ // if the game is over
                 Map<String, Integer> playerScores = manager.scoreGame(); // get the player scores
+
+                // sort entries by score in descending order
+                List<Map.Entry<String, Integer>> sortedScores = playerScores.entrySet().stream()
+                        .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                        .toList();
+
+                // create a string to display the scores
+                StringBuilder scores = new StringBuilder();
+                for(Map.Entry<String, Integer> entry : sortedScores){
+                    scores.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                }
+
+                // display the scores
+                JOptionPane endGameMessage = new JOptionPane(scores, JOptionPane.INFORMATION_MESSAGE);
+                JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over");
+                dialog.setVisible(true);
             }
 
             currentPlayerInfo(); // update player stats
