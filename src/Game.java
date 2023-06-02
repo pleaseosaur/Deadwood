@@ -485,14 +485,13 @@ public class Game {
                     scores.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
                 }
 
-                JButton exitButton = new JButton("Exit Game"); // create a button to exit the game
-                exitButton.addActionListener(a -> System.exit(0)); // add action listener to exit button
-
                 // display the scores
-                Object[] scoreBox = {scores.toString(), exitButton};
-                JOptionPane endGameMessage = new JOptionPane(scoreBox, JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane endGameMessage = new JOptionPane(scores, JOptionPane.INFORMATION_MESSAGE);
                 JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over");
                 dialog.setVisible(true);
+
+                // exit game
+                System.exit(0);
             }
 
             currentPlayerInfo(); // update player stats
