@@ -12,6 +12,7 @@ import java.net.URL;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Game {
@@ -335,20 +336,22 @@ public class Game {
             JLabel cardLabel = new JLabel(scaledImage); // Add the image icon to a label
             cardLabel.setBounds(x, y, w, h); // Set the size of the card label
 
-            cardLabel.addMouseListener(new MouseAdapter() {
+            if(!Objects.equals(path, "/resources/images/cards/CardBack.jpg")) {
+                cardLabel.addMouseListener(new MouseAdapter() {
 
-                public void mouseEntered(MouseEvent e) {
-                    cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight());
-                    cardLabel.setIcon(cardImage); // Set the card image to the original size
-                    layeredPane.setLayer(cardLabel, 7);
-                }
+                    public void mouseEntered(MouseEvent e) {
+                        cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight());
+                        cardLabel.setIcon(cardImage); // Set the card image to the original size
+                        layeredPane.setLayer(cardLabel, 7);
+                    }
 
-                public void mouseExited(MouseEvent e) {
-                    cardLabel.setBounds(x, y, w, h);
-                    cardLabel.setIcon(scaledImage); // Set the card image to the scaled size
-                    layeredPane.setLayer(cardLabel, 2);
-                }
-            });
+                    public void mouseExited(MouseEvent e) {
+                        cardLabel.setBounds(x, y, w, h);
+                        cardLabel.setIcon(scaledImage); // Set the card image to the scaled size
+                        layeredPane.setLayer(cardLabel, 2);
+                    }
+                });
+            }
 
             layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
         });
