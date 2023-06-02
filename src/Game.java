@@ -462,6 +462,10 @@ public class Game {
                 JDialog dialog = endDayMessage.createDialog(layeredPane, "End of Day"); // create a dialog
                 dialog.setVisible(true); // show the dialog
 
+                // end turn
+                manager.endTurn();
+                currentPlayerInfo(); // display current player stats
+                showTokens();
             }
 
             if(actResult[4] == 1){ // if the game is over
