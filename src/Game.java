@@ -78,6 +78,7 @@ public class Game {
     //********************************************************************************
     private void startDay() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH); // Open frame maximized
         frame.setIconImage(getImage("/resources/images/dw_icon.jpg").getImage());
         panel = new JPanel(); // Create a panel to hold all other components
         panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
