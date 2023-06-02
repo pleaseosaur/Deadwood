@@ -124,6 +124,17 @@ public class GameManager {
         return winners;
     }
 
+    // scoreGame: tallies scores and returns map linking players and scores
+    // public Map<String, Integer> scoreGame() {
+    //     Map<String, Integer> scores = new LinkedHashMap<>();
+    //     for (Player player : players) {
+    //         int score = player.getDollars() + player.getCredits() + (player.getRank()*5);
+    //         scores.put(player.getName(), score);
+    //     }
+
+    //     return scores;
+    // }
+
 
 
 

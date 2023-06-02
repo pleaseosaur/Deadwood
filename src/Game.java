@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -53,10 +54,17 @@ public class Game {
     }
 
     private void endGame() {
-        manager.scoreGame();
+        LinkedList<String> winners = manager.scoreGame();
+        if(winners.size()==1){
+            System.out.println(winners.get(0)+" wins!");
+        } else {
+            for(int i = 0; i < winners.size()-1; i++) {
+                System.out.print(winners.get(i)+", ");
+            }
+            System.out.println("and "+winners.get(winners.size()-1)+" win!");
+        }
         JFrame scoreFrame = new JFrame("Game Over");
         scoreFrame.setSize(300, 300);
-
         scoreFrame.setLocationRelativeTo(frame);
 
         scoreFrame.setVisible(true);
