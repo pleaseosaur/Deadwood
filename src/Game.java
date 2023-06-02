@@ -19,7 +19,7 @@ public class Game {
     // Fields
     private GameManager manager;
     private JFrame frame;
-    private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end;
+    private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end, standingsPanel;
     private JLayeredPane layeredPane;
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips, daysRemain;
     private Map<Take, JLabel> takeLabels = new HashMap<>();
@@ -159,11 +159,50 @@ public class Game {
 
         c.gridy = 5; // Row 5
         statsPanel.add(daysRemain, c); // Add days remaining to the stats panel
-    
-        UIManager.put("ToolTip.background", statsPanel.getBackground());
-        statsPanel.setToolTipText("test string pls ignore"); // TODO add scoreboard here?
+
+        statsPanel.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                standingsPanel = createStandingsPanel();
+                showStandingsPanel(statsPanel, standingsPanel);
+            }
+            public void mouseExited(MouseEvent e) {
+                standingsPanel.setVisible(false);
+            }
+        });
     }
 
+    private JPanel createStandingsPanel() {
+        JPanel standingsPanel = new JPanel();
+        standingsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+        // content for standings panel
+        Map<String, Integer> playerScores = manager.scoreGame(); // get the player scores
+        // sort entries by score in descending order
+        List<Map.Entry<String, Integer>> sortedScores = playerScores.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .toList();
+
+        // create a string to display the scores
+        String html = "<html>";
+        for (Map.Entry<String, Integer> entry : sortedScores) {
+            html += entry.getKey() + ": " + entry.getValue() + "<br>";
+        }
+        html += "</html>";
+        JLabel scoreLabel = new JLabel(html);
+        standingsPanel.add(scoreLabel);
+
+        return standingsPanel;
+    }
+    private void showStandingsPanel(Component parent, JPanel standingsPanel) {
+        JWindow popup = new JWindow();
+        popup.getContentPane().add(standingsPanel);
+        popup.pack();
+
+        Point parentLocation = parent.getLocationOnScreen();
+        popup.setLocation(parentLocation.x + 10, parentLocation.y + parent.getHeight());
+        popup.setAlwaysOnTop(true);
+        popup.setVisible(true);
+    }
     private void setupMessagePanel() {
         messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
         messagePanel.setPreferredSize(new Dimension(300, 500)); // Set the size of the message panel
