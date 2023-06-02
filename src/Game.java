@@ -57,11 +57,7 @@ public class Game {
         JFrame scoreFrame = new JFrame("Game Over");
         scoreFrame.setSize(300, 300);
 
-        // Set window to open centered in monitor
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - scoreFrame.getWidth()) / 2;
-        int y = (screenSize.height - scoreFrame.getHeight()) / 2;
-        scoreFrame.setLocation(x, y);
+        scoreFrame.setLocationRelativeTo(frame);
 
         scoreFrame.setVisible(true);
 
@@ -104,12 +100,6 @@ public class Game {
         frame.add(panel); // Add the panel to the frame
         frame.setSize(1500, 1000); // Set the size of the frame
         frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Do nothing on close, score will pop up and program will end when that window is closed.
-        
-        // Set window to open centered in monitor
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (screenSize.width - frame.getWidth()) / 2;
-        int y = (screenSize.height - frame.getHeight()) / 2;
-        frame.setLocation(x, y);
 
         frame.setVisible(true); // Make the frame visible
     }
@@ -229,7 +219,7 @@ public class Game {
 
         Object[] options = { "Start Game", "Cancel" }; // Buttons for the dialog
 
-        int option = JOptionPane.showOptionDialog(null, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        int option = JOptionPane.showOptionDialog(frame, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 
         if (option == 0) { // 'Start Game' selected
             Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
@@ -247,7 +237,7 @@ public class Game {
 
 
     private void renamePlayers() {
-        int renameOption = JOptionPane.showConfirmDialog(null, "Would you like to enter custom player names?", "Rename Players", JOptionPane.YES_NO_OPTION);
+        int renameOption = JOptionPane.showConfirmDialog(frame, "Would you like to enter custom player names?", "Rename Players", JOptionPane.YES_NO_OPTION);
         if(renameOption == JOptionPane.YES_OPTION) {
             for(Player player : manager.getPlayers()) {
                 String name = renamePrompt(player.getName());
