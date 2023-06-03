@@ -46,7 +46,7 @@ public class GameManager {
                 resetPlayers();
                 resetRoles();
                 setOpenScenes(10);
-                board.dealCards(); // deal cards
+                board.dealCards();
                 resetTakes();
             } else {
                 return 1;
@@ -57,34 +57,33 @@ public class GameManager {
 
 
     public void resetPlayers() {
-        int startingX = 991 + 10; // starting x coordinate
-        int startingY = 248 + 80; // starting y coordinate
+        int startingX = 991 + 10;
+        int startingY = 248 + 80;
 
         int counter = 0; // counter for player number
         for (Player player : getPlayers()) {
-            int currentX = startingX + 45 * (counter % 4); // current x coordinate
-            int currentY = startingY + 45 * (counter / 4); // current y coordinate
+            int currentX = startingX + 45 * (counter % 4);
+            int currentY = startingY + 45 * (counter / 4);
 
-            player.setLocation(board.getLocation("Trailer")); // set all players to trailer
+            player.setLocation(board.getLocation("Trailer"));
             player.setHasActed(false); // reset player actions
             player.setHasMoved(false);
             player.setHasRehearsed(false);
             player.setHasTakenRole(false);
             player.setHasUpgraded(false);
             player.setRole(); // remove role from all players
-            player.resetPracticeChips(); // reset practice chips for all players
+            player.resetPracticeChips();
             player.setPosition(currentX, currentY); // return players to starting positions
 
-            counter++; // increment counter
+            counter++;
         }
     }
 
 
     // resetRoles: resets all off-card roles to be available for next day
     public void resetRoles() {
-        // iterate through set locations and reset the default roles
         for(Location location : board.getAllLocations().values()) {
-            if(location instanceof Set set) { // if location is a set
+            if(location instanceof Set set) {
                 for(Role role : set.getRoles()) {
                     role.setTaken(false);
                 }
@@ -95,11 +94,12 @@ public class GameManager {
 
     public void resetTakes() {
         for(Location location : board.getAllLocations().values()) {
-            if(location instanceof Set set) { // if location is a set
+            if(location instanceof Set set) {
                 set.resetTakes();
             }
         }
     }
+
 
     // scoreGame: tallies scores and returns map linking players and scores
      public Map<String, Integer> scoreGame() {
@@ -124,6 +124,7 @@ public class GameManager {
         int x = destination.getArea().getX();
         int y = destination.getArea().getY();
 
+        // dynamically set x and y coordinates based on number of players at destination
         int counter = 0;
         switch(location) {
             case "Casting Office", "Trailer" -> {
@@ -295,12 +296,12 @@ public class GameManager {
 
 
     public int[] act() {
-        Set set = (Set) currentPlayer.getLocation(); // get current set
-        int budget = set.getScene().getBudget(); // get budget
+        Set set = (Set) currentPlayer.getLocation();
+        int budget = set.getScene().getBudget();
 
-        int diceResult = dice.rollDie(); // roll die
+        int diceResult = dice.rollDie();
 
-        int totalResult = diceResult + currentPlayer.getPracticeChips(); // add practice chips to result
+        int totalResult = diceResult + currentPlayer.getPracticeChips();
 
         int isSuccess = 0;
         if(totalResult >= budget){ // acting success
@@ -324,6 +325,7 @@ public class GameManager {
             endGame = wrapResults[2];
         }
 
+        // return hacky boolean flags
         return new int[] {isSuccess, diceResult, bonusRolled, endDay, endGame};
     }
 
@@ -335,7 +337,7 @@ public class GameManager {
     //********************************************************************************
     public int[] wrapScene() {
 
-        int[] results = new int[3];
+        int[] results = new int[3]; // more hacky boolean flags
 
         int bonusRolled = 0;
         int endDay = 0;
@@ -343,19 +345,19 @@ public class GameManager {
 
         Location location = currentPlayer.getLocation();
 
-        List<Player> allPlayers = new ArrayList<>(); // list of all players
-        List<Player> onCardPlayers = new ArrayList<Player>(); // list of on card players
-        List<Player> offCardPlayers = new ArrayList<Player>(); // list of off card players
+        List<Player> allPlayers = new ArrayList<>();
+        List<Player> onCardPlayers = new ArrayList<Player>();
+        List<Player> offCardPlayers = new ArrayList<Player>();
 
-        for(Player player : getPlayers()) { // for each player
-            if(player.getLocation().equals(location)) { // if player is on current location
+        for(Player player : getPlayers()) {
+            if(player.getLocation().equals(location)) {
                 if(player.getRole() != null) {
                     if(player.getRole().isOnCard()) {
-                        onCardPlayers.add(player); // add to on card players
-                        allPlayers.add(player); // add to all players
+                        onCardPlayers.add(player);
+                        allPlayers.add(player);
                     } else {
-                        offCardPlayers.add(player); // add to off card players
-                        allPlayers.add(player); // add to all players
+                        offCardPlayers.add(player);
+                        allPlayers.add(player);
                     }
                 }
             }
@@ -366,9 +368,9 @@ public class GameManager {
             bonusRolled = 1;
         }
 
-        for(Player player : allPlayers) { // for each player
-            player.setRole(null); // remove role from all players
-            player.resetPracticeChips(); // reset practice chips for all players
+        for(Player player : allPlayers) {
+            player.setRole(null);
+            player.resetPracticeChips();
         }
         // decrement Open Scenes
         setOpenScenes(getOpenScenes()-1);
@@ -387,15 +389,15 @@ public class GameManager {
 
     public void actPay(Boolean onCard, int isSuccess){
         if(isSuccess == 1) {
-            if(onCard) { // if star
-                currentPlayer.addCredits(2); // add 2 credits
-            } else { // if extra
-                currentPlayer.addDollars(1); // add 1 dollar
-                currentPlayer.addCredits(1); // add 1 credit
+            if(onCard) {
+                currentPlayer.addCredits(2);
+            } else {
+                currentPlayer.addDollars(1);
+                currentPlayer.addCredits(1);
             }
 
-        } else if(!onCard) { // if unsuccessful and extra
-            currentPlayer.addDollars(1); // add 1 dollar
+        } else if(!onCard) {
+            currentPlayer.addDollars(1);
         }
     }
 
@@ -517,12 +519,11 @@ public class GameManager {
         Map<String, String> availableRoles = new HashMap<>();
 
 
-        if(playerLocation.isSet()){ // if player is on a set
-            Set set = (Set) playerLocation; // cast player location to set
+        if(playerLocation instanceof Set set){
 
             if(!set.getScene().isWrapped()) {
-                List<Role> offCardRoles = set.getRoles(); // get off card roles
-                List<Role> onCardRoles = set.getScene().getRoles(); // get on card roles
+                List<Role> offCardRoles = set.getRoles();
+                List<Role> onCardRoles = set.getScene().getRoles();
 
                 int rank = currentPlayer.getRank();
 
@@ -580,10 +581,12 @@ public class GameManager {
         for(Location location : locations) {
             if(location instanceof Set set) {
                 Area area = set.getArea();
+
                 int x = area.getX();
                 int y = area.getY();
                 int w = area.getW();
                 int h = area.getH();
+
                 cards.put(set.getScene(), List.of(x, y, w, h));
             }
         }
@@ -600,10 +603,12 @@ public class GameManager {
             if(location instanceof Set set) {
                 for(Take take : set.getTakes()) {
                     Area area = take.getArea();
+
                     int x = area.getX();
                     int y = area.getY();
                     int w = area.getW();
                     int h = area.getH();
+
                     takes.put(take, List.of(x, y, w, h));
                 }
             }
@@ -621,7 +626,7 @@ public class GameManager {
             pathmap.put(tokens.get(player.getColor()).get(player.getRank()), position);
         }
 
-        return pathmap;
+        return pathmap; // returns map of player token image paths and positions
     }
 
 

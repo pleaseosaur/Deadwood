@@ -16,6 +16,7 @@ public abstract class Location {
         setArea(area);
     }
 
+
     // getters and setters
     public String getName(){
         return this.name;
@@ -24,6 +25,7 @@ public abstract class Location {
     public List<String> getTemp(){
         return temp;
     }
+
 
     public List<Location> getNeighbors(){
         return this.neighbors;
@@ -40,14 +42,11 @@ public abstract class Location {
         return null;
     }
 
+
     public void setArea(Area a){
         this.area = a;
     }
     public Area getArea(){
         return this.area;
-    }
-
-    public boolean isSet() {
-        return !getName().equals("Trailer") && !getName().equals("Casting Office");
     }
 }

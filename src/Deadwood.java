@@ -23,26 +23,28 @@ public class Deadwood {
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips, daysRemain;
     private final Map<Take, JLabel> takeLabels = new HashMap<>();
 
+
     // Main method
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new Deadwood().GUI());
     }
 
+
     // Initialize GUI and start game
     private void GUI() {
-        // initialize frame, pane, and panels
+        // initialize frame, pane, and panels and display game
         startDay();
 
-        // these should only be used once at the start of the game
-        selectPlayers(); // select number of players and start game
-        renamePlayers(); // option to rename players
+        selectPlayers();
+        renamePlayers();
 
-        currentPlayerInfo(); // display current player stats
+        currentPlayerInfo();
 
-        showCards(); // display cards on board
-        showTakes(); // display shot counters on board
-        showTokens(); // display player tokens on board
+        showCards();
+        showTakes();
+        showTokens();
 
+        // display quit confirmation dialog
         frame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e){
                 int cancel = JOptionPane.showConfirmDialog(frame, "Are you sure you want to quit? \nYour game will not be saved.", "Exit Game", JOptionPane.YES_NO_OPTION);
@@ -63,10 +65,10 @@ public class Deadwood {
     //********************************************************************************
     private void startDay() {
         frame = new JFrame("Deadwood"); // Create and set up the window.
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH); // Open frame maximized
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         frame.setIconImage(getImage("/resources/images/dw_icon.jpg").getImage());
         panel = new JPanel(); // Create a panel to hold all other components
-        panel.setLayout(new BorderLayout()); // Use BorderLayout for panel
+        panel.setLayout(new BorderLayout());
 
         // initialize the buttons
         setupButtons();
@@ -83,11 +85,11 @@ public class Deadwood {
         // Setup the board
         setupBoard();
 
-        frame.add(panel); // Add the panel to the frame
-        frame.setSize(1500, 1000); // Set the size of the frame
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); // Do nothing on close, score will pop up and program will end when that window is closed.
+        frame.add(panel);
+        frame.setSize(1500, 1000);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
-        frame.setVisible(true); // Make the frame visible
+        frame.setVisible(true);
     }
 
 
@@ -95,9 +97,9 @@ public class Deadwood {
         buttonPanel = new JPanel(); // Create a separate panel for the buttons
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        Dimension buttonSize = new Dimension(100, 50); // Set the size of the buttons
+        Dimension buttonSize = new Dimension(100, 50);
 
-        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER)); // Create panels for button order
+        JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel middleButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel bottomButtons = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
@@ -125,40 +127,43 @@ public class Deadwood {
 
 
     private void setupStats() {
-        statsPanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for statsPanel
-        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
+        statsPanel = new JPanel(new GridBagLayout());
+        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        GridBagConstraints c = new GridBagConstraints(); // constraints object
+        GridBagConstraints c = new GridBagConstraints();
 
-        c.gridx = 0; // Column 0
-        c.fill = GridBagConstraints.HORIZONTAL; // fill horizontal space
-        c.weightx = 1; // take up all available horizontal space
+        c.gridx = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx = 1;
 
-        playerName = createLabel("", 35, 15); // Create a label to display the player's name
-        playerRank = createLabel("", 15, 10); // Create a label to display the player's rank
-        playerDollars = createLabel("", 15, 10); // Create a label to display the player's dollars
-        playerCredits = createLabel("", 15, 10); // Create a label to display the player's credits
-        playerChips = createLabel("", 15, 10); // Create a label to display the player's chips
-        daysRemain = createLabel("", 12, 10); // Create a label to display the day
+        // initialize player stat labels
+        playerName = createLabel("", 35, 15);
+        playerRank = createLabel("", 15, 10);
+        playerDollars = createLabel("", 15, 10);
+        playerCredits = createLabel("", 15, 10);
+        playerChips = createLabel("", 15, 10);
+        daysRemain = createLabel("", 12, 10);
 
-        c.gridy = 0; // Row 0
-        statsPanel.add(playerName, c); // Add player name to the stats panel
+        // add player stat labels to stats panel
+        c.gridy = 0;
+        statsPanel.add(playerName, c);
 
-        c.gridy = 1; // Row 1
-        statsPanel.add(playerRank, c); // Add player rank to the stats panel
+        c.gridy = 1;
+        statsPanel.add(playerRank, c);
 
-        c.gridy = 2; // Row 2
-        statsPanel.add(playerDollars, c); // Add player dollars to the stats panel
+        c.gridy = 2;
+        statsPanel.add(playerDollars, c);
 
-        c.gridy = 3; // Row 3
-        statsPanel.add(playerCredits, c); // Add player credits to the stats panel
+        c.gridy = 3;
+        statsPanel.add(playerCredits, c);
 
-        c.gridy = 4; // Row 4
-        statsPanel.add(playerChips, c); // Add player practice chips to the stats panel
+        c.gridy = 4;
+        statsPanel.add(playerChips, c);
 
-        c.gridy = 5; // Row 5
-        statsPanel.add(daysRemain, c); // Add days remaining to the stats panel
+        c.gridy = 5;
+        statsPanel.add(daysRemain, c);
 
+        // display player standings on mouse hover
         statsPanel.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 standingsPanel = createStandingsPanel();
@@ -170,12 +175,13 @@ public class Deadwood {
         });
     }
 
+
     private JPanel createStandingsPanel() {
         JPanel standingsPanel = new JPanel();
         standingsPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        // content for standings panel
-        Map<String, Integer> playerScores = manager.scoreGame(); // get the player scores
+        Map<String, Integer> playerScores = manager.scoreGame();
+
         // sort entries by score in descending order
         List<Map.Entry<String, Integer>> sortedScores = playerScores.entrySet().stream()
                 .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
@@ -194,16 +200,20 @@ public class Deadwood {
 
         return standingsPanel;
     }
+
+
     private void showStandingsPanel(Component parent, JPanel standingsPanel) {
         JWindow popup = new JWindow();
         popup.getContentPane().add(standingsPanel);
-        popup.pack();
+        popup.pack(); // resize the window to fit the contents
 
         Point parentLocation = parent.getLocationOnScreen();
         popup.setLocation(parentLocation.x + 10, parentLocation.y + parent.getHeight());
         popup.setAlwaysOnTop(true);
         popup.setVisible(true);
     }
+
+
     private void hideStandingsPanel(JPanel standingsPanel) {
         Window window = SwingUtilities.getWindowAncestor(standingsPanel);
         if (window instanceof JWindow) {
@@ -212,62 +222,65 @@ public class Deadwood {
         }
     }
 
+
+    // Blank panel to display dynamic messages
     private void setupMessagePanel() {
-        messagePanel = new JPanel(new GridBagLayout()); // Use GridBagLayout for messagePanel
-        messagePanel.setPreferredSize(new Dimension(300, 500)); // Set the size of the message panel
-        messagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // Add a border to the panel
-        messagePanel.setOpaque(false); // Make the panel transparent
+        messagePanel = new JPanel(new GridBagLayout());
+        messagePanel.setPreferredSize(new Dimension(300, 500));
+        messagePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        messagePanel.setOpaque(false);
     }
 
 
+    // Main side panel that holds stats, messages, and buttons
     private void setupRightPanel() {
         JPanel rightPanel = new JPanel(new BorderLayout());
         rightPanel.add(statsPanel, BorderLayout.NORTH);
-        rightPanel.add(messagePanel, BorderLayout.CENTER); // Add the message panel to the right panel (top
+        rightPanel.add(messagePanel, BorderLayout.CENTER);
         rightPanel.add(buttonPanel, BorderLayout.SOUTH);
-        panel.add(rightPanel, BorderLayout.EAST); // Add the right panel to the panel
+        panel.add(rightPanel, BorderLayout.EAST);
     }
 
 
     private void setupBoard() {
-        layeredPane = new JLayeredPane(); // Create the JLayeredPane to hold the board, cards, tokens, etc.
+        layeredPane = new JLayeredPane(); // holds the board, cards, tokens, etc.
 
-        ImageIcon board = getImage("/resources/images/board.jpg"); // Create the board image
-        layeredPane.setPreferredSize(new Dimension(board.getIconWidth(), board.getIconHeight())); // Set the size of the game board
+        ImageIcon board = getImage("/resources/images/board.jpg");
+        layeredPane.setPreferredSize(new Dimension(board.getIconWidth(), board.getIconHeight()));
 
-        JLabel boardLabel = new JLabel(board); // Add the board image to a label
-        boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight()); // Set the size of the board label
+        JLabel boardLabel = new JLabel(board);
+        boardLabel.setBounds(0, 0, board.getIconWidth(), board.getIconHeight());
 
-        layeredPane.add(boardLabel, Integer.valueOf(0)); // Add the board to the lowest layer
+        layeredPane.add(boardLabel, Integer.valueOf(0));
 
-        JScrollPane scrollPane = new JScrollPane(layeredPane); // Create a scroll pane to hold the layered pane
+        JScrollPane scrollPane = new JScrollPane(layeredPane);
 
-        panel.add(scrollPane, BorderLayout.CENTER); // Add the layered pane to the panel
+        panel.add(scrollPane, BorderLayout.CENTER);
     }
 
 
     private void selectPlayers() throws NullPointerException {
-        // Player selection dialog
-        Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // Number of players choices
-        JComboBox<Integer> numPlayers = new JComboBox<>(choices); // Create a combo box for the number of players
 
-        Object[] message = {
-                "Please select the number of players:", numPlayers
-        };
+        Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // restrict the number of players to 2-8
+        JComboBox<Integer> numPlayers = new JComboBox<>(choices);
 
-        Object[] options = { "Start Game", "Cancel" }; // Buttons for the dialog
+        Object[] message = {"Please select the number of players:", numPlayers};
 
-        int option = JOptionPane.showOptionDialog(frame, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+        Object[] buttons = { "Start Game", "Cancel" };
+
+        int option = JOptionPane.showOptionDialog(frame, message, "Game Setup", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons, buttons[0]);
 
         if (option == 0) { // 'Start Game' selected
-            Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
+            Integer input = (Integer) numPlayers.getSelectedItem(); // get input
             this.manager = new GameManager(Objects.requireNonNull(input)); // Create a new game manager with the selected number of players
-        } else { // 'Cancel' selected or dialog closed
+        }
+
+        else { // 'Cancel' selected or dialog closed
             int cancel = JOptionPane.showConfirmDialog(frame, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
             if(cancel == JOptionPane.YES_OPTION) {
-                System.exit(0); // Exit the program
+                System.exit(0);
             } else {
-                selectPlayers(); // Show the player selection dialog again
+                selectPlayers();
             }
         }
     }
@@ -305,15 +318,15 @@ public class Deadwood {
             case "y" -> playerName.setForeground(Color.YELLOW);
         }
 
-        playerName.setText(currentPlayer.getName()); // Set the player name
-        playerRank.setText("Rank: " + currentPlayer.getRank()); // Set player rank
-        playerDollars.setText("Dollars: " + currentPlayer.getDollars()); // Set player dollars
-        playerCredits.setText("Credits: " + currentPlayer.getCredits()); // Set player credits
-        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips()); // Set player practice chips
-        daysRemain.setText("Days Remaining: " + manager.getDays()); // Set days remaining
+        playerName.setText(currentPlayer.getName());
+        playerRank.setText("Rank: " + currentPlayer.getRank());
+        playerDollars.setText("Dollars: " + currentPlayer.getDollars());
+        playerCredits.setText("Credits: " + currentPlayer.getCredits());
+        playerChips.setText("Practice Chips: " + currentPlayer.getPracticeChips());
+        daysRemain.setText("Days Remaining: " + manager.getDays());
         daysRemain.setForeground(Color.GRAY);
 
-        showActiveButtons(); // Show the buttons that the player can use
+        showActiveButtons();
     }
 
 
@@ -330,14 +343,15 @@ public class Deadwood {
     }
 
 
-    private void setButtonStyle(JPanel button, boolean enabled) { // Set the style of the button based on the enabled status
-        button.setEnabled(enabled); // Set the enabled status of the button
-        for(Component c : button.getComponents()) { // Iterate through the components of the button
-            c.setEnabled(enabled); // Set the enabled status of the component
-            if(c instanceof JLabel label) { // If the component is a label
-                label.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the label
-            } else if(c instanceof JButton btn) { // If the component is a button
-                btn.setForeground(enabled ? Color.BLACK : Color.GRAY); // Set the color of the button
+    // Set the style of the button based on the enabled status
+    private void setButtonStyle(JPanel button, boolean enabled) {
+        button.setEnabled(enabled);
+        for(Component c : button.getComponents()) {
+            c.setEnabled(enabled);
+            if(c instanceof JLabel label) {
+                label.setForeground(enabled ? Color.BLACK : Color.GRAY);
+            } else if(c instanceof JButton btn) {
+                btn.setForeground(enabled ? Color.BLACK : Color.GRAY);
             }
         }
     }
@@ -349,88 +363,94 @@ public class Deadwood {
         for (Component c : components) {
             layeredPane.remove(c);
         }
-        // Refresh the layeredPane after removals
+
         layeredPane.revalidate();
         layeredPane.repaint();
 
-        manager.getCards().forEach((card, area) -> { // Iterate through the cards and their areas
-            String path = card.getImg(); // Get the path to the card image
+        manager.getCards().forEach((card, area) -> {
+            String path = card.getImg();
 
-            int x = area.get(0); // Get the x coordinate of the card
-            int y = area.get(1); // Get the y coordinate of the card
-            int w = area.get(2); // Get the width of the card
-            int h = area.get(3); // Get the height of the card
+            int x = area.get(0);
+            int y = area.get(1);
+            int w = area.get(2);
+            int h = area.get(3);
 
-            ImageIcon cardImage = getImage(path); // Create an image icon from the path
-            ImageIcon scaledImage = new ImageIcon(cardImage.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH)); // Scale the image icon to the card size
-            JLabel cardLabel = new JLabel(scaledImage); // Add the image icon to a label
-            cardLabel.setBounds(x, y, w, h); // Set the size of the card label
+            ImageIcon cardImage = getImage(path);
+            ImageIcon scaledImage = new ImageIcon(cardImage.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH));
+            JLabel cardLabel = new JLabel(scaledImage);
+            cardLabel.setBounds(x, y, w, h);
 
             if(!Objects.equals(path, "/resources/images/cards/CardBack.jpg")) { // If the card is not the card back
                 cardLabel.addMouseListener(new MouseAdapter() { // Add a mouse listener to the card
 
-                    public void mouseEntered(MouseEvent e) { // When the mouse enters the card
-                        cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight()); // Set the size of the card label to the original size
-                        cardLabel.setIcon(cardImage); // Set the card image to the original size
-                        layeredPane.setLayer(cardLabel, 7); // Set the card to the top layer
+                    // Enlarge the card on mouse hover
+                    public void mouseEntered(MouseEvent e) {
+                        cardLabel.setBounds(x, y, cardImage.getIconWidth(), cardImage.getIconHeight());
+                        cardLabel.setIcon(cardImage);
+                        layeredPane.setLayer(cardLabel, 7);
                     }
 
-                    public void mouseExited(MouseEvent e) { // When the mouse exits the card
-                        cardLabel.setBounds(x, y, w, h); // Set the size of the card label to the scaled size
-                        cardLabel.setIcon(scaledImage); // Set the card image to the scaled size
-                        layeredPane.setLayer(cardLabel, 2); // Set the card back to the second layer
+                    // Return the card to its original size on mouse exit
+                    public void mouseExited(MouseEvent e) {
+                        cardLabel.setBounds(x, y, w, h);
+                        cardLabel.setIcon(scaledImage);
+                        layeredPane.setLayer(cardLabel, 2);
                     }
                 });
             }
 
-            layeredPane.add(cardLabel, Integer.valueOf(2)); // Add the card to the second layer
+            layeredPane.add(cardLabel, Integer.valueOf(2));
         });
     }
 
 
     private void showTakes() {
-        manager.getTakes().forEach((take, area) -> { // Iterate through the takes and their areas
-            String path = take.getImg(); // Get the path to the take image
-            int x = area.get(0); // Get the x coordinate of the take
-            int y = area.get(1); // Get the y coordinate of the take
-            int w = area.get(2); // Get the width of the take
-            int h = area.get(3); // Get the height of the take
-            ImageIcon takeImage = getImage(path); // Create an image icon from the path
-            JLabel takeLabel = new JLabel(takeImage); // Add the image icon to a label
-            takeLabel.setBounds(x, y, w, h); // Set the size of the take label
-            layeredPane.add(takeLabel, Integer.valueOf(1)); // Add the take to the second layer
+        manager.getTakes().forEach((take, area) -> {
+            String path = take.getImg();
 
-            takeLabels.put(take, takeLabel); // Stores take label into Map
+            int x = area.get(0);
+            int y = area.get(1);
+            int w = area.get(2);
+            int h = area.get(3);
+
+            ImageIcon takeImage = getImage(path);
+            JLabel takeLabel = new JLabel(takeImage);
+            takeLabel.setBounds(x, y, w, h);
+            layeredPane.add(takeLabel, Integer.valueOf(1));
+
+            takeLabels.put(take, takeLabel);
         });
     }
 
 
     private void clearTakes() {
-        for (JLabel takeLabel : takeLabels.values()) { // Iterate through the take labels
-            layeredPane.remove(takeLabel); // Remove the take label from the layered pane
+        for (JLabel takeLabel : takeLabels.values()) {
+            layeredPane.remove(takeLabel);
         }
-        takeLabels.clear(); // Clear the take labels map
-        layeredPane.repaint(); // Repaint the layered pane
+        takeLabels.clear();
+        layeredPane.repaint();
     }
 
 
+    // Display player tokens on the board
     private void showTokens() {
         // Remove all components in layer 3
         Component[] components = layeredPane.getComponentsInLayer(3);
         for (Component c : components) {
             layeredPane.remove(c);
         }
-        // Refresh the layeredPane after removals
+
         layeredPane.revalidate();
         layeredPane.repaint();
 
-        manager.getTokens().forEach((path, position) -> { // Iterate through the tokens and their positions
-            int x = position[0]; // Get the x coordinate of the token
-            int y = position[1]; // Get the y coordinate of the token
-            ImageIcon token = getImage(path); // Create an image icon from the path
-            JLabel tokenLabel = new JLabel(token); // Add the image icon to a label
-            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight()); // Set the size of the token label
-            layeredPane.add(tokenLabel, Integer.valueOf(3)); // Add the token to the third layer
+        manager.getTokens().forEach((path, position) -> {
+            int x = position[0];
+            int y = position[1];
+
+            ImageIcon token = getImage(path);
+            JLabel tokenLabel = new JLabel(token);
+            tokenLabel.setBounds(x, y, token.getIconWidth(), token.getIconHeight());
+            layeredPane.add(tokenLabel, Integer.valueOf(3));
         });
     }
 
@@ -440,62 +460,69 @@ public class Deadwood {
     //********************************************************************************
     //                               Action Listeners
     //********************************************************************************
-    private ActionListener moveListener() {
+    private ActionListener moveListener() { // Move button action listener
         return e -> {
-            JPopupMenu locationMenu = new JPopupMenu(); // Create a popup menu for the locations
+            JPopupMenu locationMenu = new JPopupMenu();
+
             for(String location : manager.getAvailableLocations()) {
-                JMenuItem locationItem = new JMenuItem(location); // Create a menu item for the location
+                JMenuItem locationItem = new JMenuItem(location);
+
                 locationItem.addActionListener(a -> {
-                    manager.move(location); // Move player to the selected location
+                    manager.move(location);
                     showTokens();
                     currentPlayerInfo();
                 });
-                locationMenu.add(locationItem); // Add location to the location menu
+
+                locationMenu.add(locationItem);
             }
+
             locationMenu.show(btn_move, btn_move.getWidth()/2, btn_move.getHeight()/2); // Show the location menu
         };
     }
 
 
-    private ActionListener takeRoleListener() {
+    private ActionListener takeRoleListener() { // Take Role button action listener
         return e -> {
-            JPopupMenu roleMenu = new JPopupMenu(); // create popup menu
-            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) { // add each role to the menu
+            JPopupMenu roleMenu = new JPopupMenu();
+
+            for(Map.Entry<String, String> role : manager.getAvailableRoles().entrySet()) {
                 JMenuItem roleItem = new JMenuItem(role.getKey() + role.getValue());
-                roleItem.addActionListener(a -> { // add action listener to each role
-                    manager.takeRole(role.getKey()); // take the selected role
-                    showTokens(); // update player tokens
-                    currentPlayerInfo(); // update player stats
+
+                roleItem.addActionListener(a -> {
+                    manager.takeRole(role.getKey());
+                    showTokens();
+                    currentPlayerInfo();
                 });
-                roleMenu.add(roleItem); // add the menu item to the menu
+
+                roleMenu.add(roleItem);
             }
-            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2); // show the menu
+
+            roleMenu.show(btn_role, btn_role.getWidth()/2, btn_role.getHeight()/2);
         };
     }
 
 
-    private ActionListener rehearseListener() {
+    private ActionListener rehearseListener() { // Rehearse button action listener
         return e -> {
-          manager.rehearse(); // rehearse
-          displayMessage("+1 Practice Chips", Color.GREEN, 150); // display message
-          currentPlayerInfo(); // update player stats
+          manager.rehearse();
+          displayMessage("+1 Practice Chips", Color.GREEN, 150);
+          currentPlayerInfo();
         };
     }
 
 
-    private ActionListener actListener() {
+    private ActionListener actListener() { // Act button action listener
         return e -> {
-            int[] actResult = manager.act(); // act and get result
+            int[] actResult = manager.act(); // get hacky act results
 
             // display rolled number
             int diceResult = actResult[1];
-
             displayMessage("You rolled a: " + diceResult, Color.BLACK, 0);
 
             // display success or failure message
             String message = actResult[0] == 1 ? "ACT SUCCESS!" : "ACT FAILED!";
             Color color = actResult[0] == 1 ? Color.GREEN : Color.RED;
-            displayMessage(message, color, 35); // display message
+            displayMessage(message, color, 35);
 
             // display bonus message
             if(actResult[2] == 1){
@@ -503,32 +530,31 @@ public class Deadwood {
             }
 
             if(actResult[0] == 1){ // if the act was successful
-                clearTakes(); // clear the shot counters
-                showTakes(); // update the shot counters
+                clearTakes();
+                showTakes();
             }
 
             if(actResult[3] == 1){ // if the day is over
-                JOptionPane endDayMessage = new JOptionPane("Scenes are wrapped and the day has ended!", JOptionPane.INFORMATION_MESSAGE); // create a new message
-                JDialog dialog = endDayMessage.createDialog(layeredPane, "End of Day"); // create a dialog
-                dialog.setVisible(true); // show the dialog
+                JOptionPane endDayMessage = new JOptionPane("Scenes are wrapped and the day has ended!", JOptionPane.INFORMATION_MESSAGE);
+                JDialog dialog = endDayMessage.createDialog(layeredPane, "End of Day");
+                dialog.setVisible(true);
 
-                // end turn
                 manager.endTurn();
-                currentPlayerInfo(); // display current player stats
+                currentPlayerInfo();
                 showTokens();
             }
 
             if(actResult[4] == 1){ // if the game is over
-                Map<String, Integer> playerScores = manager.scoreGame(); // get the player scores
+                Map<String, Integer> playerScores = manager.scoreGame();
 
                 // sort entries by score in descending order
                 List<Map.Entry<String, Integer>> sortedScores = playerScores.entrySet().stream()
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .toList();
-                
-                // create a string to display the scores
+
                 StringBuilder scores = new StringBuilder();
 
+                // get winner(s)
                 Iterator<Map.Entry<String, Integer>> iterator = playerScores.entrySet().iterator();
                 Map.Entry<String, Integer> firstEntry = iterator.next();
                 String currWinner = firstEntry.getKey();
@@ -547,132 +573,130 @@ public class Deadwood {
                 JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over: Final Scores");
                 dialog.setVisible(true);
 
-                // exit game
                 System.exit(0);
             }
 
-            currentPlayerInfo(); // update player stats
-            showCards(); // update player cards
-            showTokens(); // update player tokens
+            currentPlayerInfo();
+            showCards();
+            showTokens();
         };
     }
 
 
-    private ActionListener upgradeListener() {
+    private ActionListener upgradeListener() { // Upgrade button action listener
         return e -> {
             // Get available upgrades and player's current money
             var availableUpgrades = manager.getAvailableUpgrades();
             int playerDollars = manager.getCurrentPlayer().getDollars();
             int playerCredits = manager.getCurrentPlayer().getCredits();
 
-            // Create the dialog and set a grid bag layout
             JDialog dialog = new JDialog();
             GridBagLayout layout = new GridBagLayout();
             dialog.setLayout(layout);
 
-            // Create a button to confirm the upgrade
             JButton confirmButton = new JButton("Confirm");
-            // Create a button to cancel the upgrade
             JButton cancelButton = new JButton("Cancel");
 
-            GridBagConstraints constraints = new GridBagConstraints(); // Create constraints for the layout
+            GridBagConstraints constraints = new GridBagConstraints();
 
-            // Create a button group for all buttons
             ButtonGroup group = new ButtonGroup();
 
-            confirmButton.setEnabled(false); // Disable the confirm button
+            confirmButton.setEnabled(false);
 
             // Create an AtomicInteger to be used as an index in the forEach loop
             AtomicInteger i = new AtomicInteger();
 
-            // Iterate through each available upgrade
-            availableUpgrades.forEach((rank, options) -> { // Iterate through each rank and its options
+            // Add upgrade options to the dialog
+            availableUpgrades.forEach((rank, options) -> {
                 constraints.gridy = i.getAndIncrement(); // Set the y position to the current index
-                ImageIcon icon = getImage("/resources/images/tokens/w" + rank + ".png"); // Get the rank icon
-                JLabel rankLabel = new JLabel(icon); // Create a label for the rank icon
-                constraints.gridx = 0; // Set the x position to 0
-                dialog.add(rankLabel, constraints); // Add the rank icon to the dialog
+                ImageIcon icon = getImage("/resources/images/tokens/w" + rank + ".png");
+                JLabel rankLabel = new JLabel(icon);
+                constraints.gridx = 0;
+                dialog.add(rankLabel, constraints);
 
                 boolean canUpgrade = rank > manager.getCurrentPlayer().getRank();
-                for (String option : options) { // Iterate through each option
+
+                for (String option : options) {
                     String[] parts = option.split(" "); // Split the option into its price and currency
                     int price = Integer.parseInt(parts[0]); // Get the price
 
                     // Only enable the radio button if rank > player rank and the player can afford the upgrade
                     boolean canAfford = parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
 
+                    JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]);
+                    currencyButton.addItemListener(s -> confirmButton.setEnabled(currencyButton.isSelected())); // Enable the confirm button iff the radio button is selected
+                    currencyButton.setEnabled(canAfford && canUpgrade);
+                    currencyButton.setActionCommand(rank + " " + parts[1]);
+                    group.add(currencyButton);
 
-                    JCheckBox currencyButton = new JCheckBox(parts[0] + " " + parts[1]); // Create a radio button for the currency
-                    currencyButton.addItemListener(s -> confirmButton.setEnabled(currencyButton.isSelected())); // Enable the confirm button if the radio button is selected
-                    currencyButton.setEnabled(canAfford && canUpgrade); // Enable the radio button if the player can afford the upgrade
-                    currencyButton.setActionCommand(rank + " " + parts[1]); // Set the action command to the rank and currency
-                    group.add(currencyButton); // Add the radio button to the group
                     if (parts[1].equals("dollars")) { // If the currency is dollars
-                        constraints.gridx = 1; // Set the x position to 1
+                        constraints.gridx = 1;
                     } else { // If the currency is credits
-                        constraints.gridx = 2; // Set the x position to 2
+                        constraints.gridx = 2;
                     }
-                    dialog.add(currencyButton, constraints); // Add the radio button to the dialog
+
+                    dialog.add(currencyButton, constraints);
                 }
 
                 // Only enable the rank label if the player can afford any of the upgrade options
                 boolean canAffordAny = options.stream().anyMatch(option -> {
                     String[] parts = option.split(" "); // Split the option into its price and currency
                     int price = Integer.parseInt(parts[0]); // Get the price
-                    return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price; // Check if the player can afford the option
+                    return parts[1].equals("dollars") ? playerDollars >= price : playerCredits >= price;
                 });
+
                 rankLabel.setEnabled(canAffordAny && canUpgrade); // Enable the rank label if the player can afford any of the options
             });
 
-            constraints.gridy = availableUpgrades.size(); // Set the y position to the number of available upgrades
-            constraints.gridx = 0; // Set the x position to 0
-            constraints.gridwidth = 1; // Set the grid width to 1
-            constraints.insets = new Insets(20, 0, 0, 0); // Set the insets to 10, 0, 0, 0
+            constraints.gridy = availableUpgrades.size();
+            constraints.gridx = 0;
+            constraints.gridwidth = 1;
+            constraints.insets = new Insets(20, 0, 0, 0);
 
-            dialog.add(confirmButton, constraints); // Add the confirm button
-            constraints.gridx = 2; // Set the x position to 2
-            dialog.add(cancelButton, constraints); // Add the cancel button
+            dialog.add(confirmButton, constraints);
+            constraints.gridx = 2;
+            dialog.add(cancelButton, constraints);
 
-            confirmButton.addActionListener(a -> { // Add an action listener to the confirm button
-                String actionCommand = group.getSelection().getActionCommand(); // Get the selected upgrade
+            confirmButton.addActionListener(a -> {
+                String actionCommand = group.getSelection().getActionCommand();
                 String[] parts = actionCommand.split(" "); // Split the upgrade into its rank and currency
                 String rankStr = parts[0]; // Get the selected rank
                 String currency = parts[1]; // Get the selected currency
 
                 // Get the selected upgrade
                 Upgrade selectedUpgrade = null;
-                for (Upgrade upgrade : ((CastingOffice) manager.getCurrentPlayer().getLocation()).getUpgrades()) { // Iterate through each upgrade
-                    if (upgrade.getRank() == Integer.parseInt(rankStr) && upgrade.getCurrency().equals(currency)) { // If the upgrade matches the selected rank and currency
-                        selectedUpgrade = upgrade; // Set the selected upgrade
+                for (Upgrade upgrade : ((CastingOffice) manager.getCurrentPlayer().getLocation()).getUpgrades()) {
+                    if (upgrade.getRank() == Integer.parseInt(rankStr) && upgrade.getCurrency().equals(currency)) {
+                        selectedUpgrade = upgrade;
                         break;
                     }
                 }
 
                 // Perform the upgrade
-                if (selectedUpgrade != null) { // If the upgrade is valid
-                    manager.upgrade(selectedUpgrade, currency); // Perform the upgrade
-                    dialog.dispose(); // Close the dialog
-                    currentPlayerInfo(); // Update player stats
-                    showTokens(); // Update player tokens
+                if (selectedUpgrade != null) {
+                    manager.upgrade(selectedUpgrade, currency);
+                    dialog.dispose();
+                    currentPlayerInfo();
+                    showTokens();
                 } else { // If the upgrade is invalid
-                    JOptionPane.showMessageDialog(layeredPane, "Please select an upgrade"); // Show an error message
+                    JOptionPane.showMessageDialog(layeredPane, "Please select an upgrade");
                 }
             });
 
             cancelButton.addActionListener(a -> dialog.dispose());
 
             // Set the dialog properties
-            dialog.setIconImage(getImage("/resources/images/tokens/w6.png").getImage()); // Set the icon of the dialog
-            dialog.setTitle("   Casting Office: Pay dollars OR credits to upgrade."); // Set the title of the dialog
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
-            dialog.setSize(400, 400); // Set the size of the dialog
-            dialog.setLocationRelativeTo(layeredPane); // Center the dialog
-            dialog.setVisible(true); // Show the dialog
+            dialog.setIconImage(getImage("/resources/images/tokens/w6.png").getImage());
+            dialog.setTitle("   Casting Office: Pay dollars OR credits to upgrade.");
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setSize(400, 400);
+            dialog.setLocationRelativeTo(layeredPane);
+            dialog.setVisible(true);
         };
     }
 
 
-    private ActionListener endTurnListener() {
+    private ActionListener endTurnListener() { // End Turn button action listener
         return e -> {
             manager.endTurn();
             currentPlayerInfo();
@@ -695,83 +719,85 @@ public class Deadwood {
 
 
     private JPanel createButton(String buttonName, Dimension buttonSize, int top, int bottom, ActionListener action) {
-        JButton button = new JButton(buttonName); // Create a button with the given name
-        button.setPreferredSize(buttonSize); // Set the size of the button
-        button.addActionListener(action); // Add the action listener to the button
+        JButton button = new JButton(buttonName);
+        button.setPreferredSize(buttonSize);
+        button.addActionListener(action);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout()); // Create a panel for the button
-        buttonPanel.add(button); // Add the button to the panel
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0)); // Set the border of the panel
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(button);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(top, 0, bottom, 0));
         return buttonPanel;
     }
 
 
-    private JLabel createLabel(String text, int fontSize, int spacing) { // Create a label with the given text, font size, and spacing
-        JLabel label = new JLabel(text); // Create a label with the given text
-        label.setFont(new Font("Serif", Font.BOLD, fontSize)); // Set the font of the label
-        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0)); // Set the border of the label
+    private JLabel createLabel(String text, int fontSize, int spacing) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font("Serif", Font.BOLD, fontSize));
+        label.setBorder(BorderFactory.createEmptyBorder(0, 0, spacing, 0));
         return label;
     }
 
 
     private String renamePrompt(String name) {
-        JTextField input = new JTextField(); // Create a text field for the user to enter a name
+        JTextField input = new JTextField();
         final JComponent[] inputs = new JComponent[] {
-                new JLabel("Please enter a name for " + name + ": "), // Create a label to prompt the user to enter a name
-                input // Add the text field to the dialog
+                new JLabel("Please enter a name for " + name + ": "),
+                input
         };
 
-        String newName; // The new name to be returned
+        String newName;
         do {
-            JOptionPane optionPane = new JOptionPane(inputs, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION); // Create a new option pane with the inputs
-            JDialog prompt = optionPane.createDialog(layeredPane, "Rename Player"); // Create a new dialog with the option pane
+            JOptionPane optionPane = new JOptionPane(inputs, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION);
+            JDialog prompt = optionPane.createDialog(layeredPane, "Rename Player");
 
             // Use a timer to request focus after the dialog is visible
             new Timer(100, e -> input.requestFocusInWindow()).start(); // Request focus on the text field
 
-            prompt.setVisible(true); // Show the dialog
-            newName = input.getText().trim(); // trim() is used to remove leading and trailing spaces
-        } while(newName.isEmpty()); // Loop until the user enters a name
+            prompt.setVisible(true);
+            newName = input.getText().trim(); // remove leading and trailing whitespace
+        } while(newName.isEmpty());
 
         return newName;
     }
 
 
+    // Display a gradually fading message in the message panel
     private void displayMessage(String message, Color color, int y) {
 
-        JLabel messageLabel = new JLabel(message); // Create a label with the given message
-        messageLabel.setFont(new Font("Serif", Font.BOLD, 25)); // Set the font of the label
-        messageLabel.setForeground(color); // Set the color of the label
+        JLabel messageLabel = new JLabel(message);
+        messageLabel.setFont(new Font("Serif", Font.BOLD, 25));
+        messageLabel.setForeground(color);
 
-        GridBagConstraints c = new GridBagConstraints(); // Create a new constraints object
-        c.gridx = 0; // Column 0
-        c.gridy = y; // Row 0
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = y;
 
-        messagePanel.add(messageLabel, c); // Add the label to statsPanel
-        messagePanel.revalidate(); // Revalidate the panel to update the layout
+        messagePanel.add(messageLabel, c);
+        messagePanel.revalidate();
 
         int delay = 100; // Delay between each iteration
         int totalDuration = 2000; // Total duration of the animation
 
-        ActionListener taskPerformer = new ActionListener() { // Create a new action listener
+        ActionListener messageFader = new ActionListener() {
             int trigger = 0; // The number of times the timer has triggered
-            public void actionPerformed(ActionEvent evt) { // Called each time the timer triggers
+            public void actionPerformed(ActionEvent evt) { // on each trigger
                 float opacity = 1.0f - ((float) trigger * delay / totalDuration); // Calculate the opacity of the label
                 messageLabel.setForeground(new Color(
                         messageLabel.getForeground().getRed() / 255f,
                         messageLabel.getForeground().getGreen() / 255f,
                         messageLabel.getForeground().getBlue() / 255f,
                         opacity)); // Set the opacity of the label
-                trigger++; // Increment the trigger
+                trigger++;
+
                 if (trigger * delay >= totalDuration) { // If the animation is complete
                     ((Timer)evt.getSource()).stop(); // Stop the timer
-                    messagePanel.remove(messageLabel); // Remove the label from statsPanel
-                    messagePanel.revalidate(); // Revalidate the panel to update the layout
+                    messagePanel.remove(messageLabel);
+                    messagePanel.revalidate();
                     messagePanel.repaint();
                 }
             }
         };
 
-        new Timer(delay, taskPerformer).start(); // Start the timer
+        new Timer(delay, messageFader).start(); // Start the timer
     }
 }

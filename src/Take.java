@@ -15,10 +15,6 @@ public class Take {
         this.number = n;
     }
 
-    public int getNumber(){
-        return this.number;
-    }
-
     public void setArea(Area a){
         this.area = a;
     }
