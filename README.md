@@ -31,7 +31,7 @@ time is about 60 minutes.
 
 ---
 
-To compile the game from the terminal, navigate to CSCI_345_cox_hafner/Deadwood and run
+To compile the game from the terminal, navigate to Deadwood and run
 the following command:
 
 ```javac *.java```
