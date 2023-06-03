@@ -525,16 +525,26 @@ public class Deadwood {
                 List<Map.Entry<String, Integer>> sortedScores = playerScores.entrySet().stream()
                         .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
                         .toList();
-
+                
                 // create a string to display the scores
                 StringBuilder scores = new StringBuilder();
+
+                Iterator<Map.Entry<String, Integer>> iterator = playerScores.entrySet().iterator();
+                Map.Entry<String, Integer> firstEntry = iterator.next();
+                String currWinner = firstEntry.getKey();
+                int currScore = firstEntry.getValue();
+                boolean tie = iterator.hasNext() && iterator.next().getValue() == currScore;
+
+                scores.append(tie ? "It's a tie!\n\n" : currWinner + " wins!\n\n");
+                
+                // get scores
                 for(Map.Entry<String, Integer> entry : sortedScores){
-                    scores.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                    scores.append(entry.getKey()).append(":   ").append(entry.getValue()).append(" points\n\n");
                 }
 
                 // display the scores
                 JOptionPane endGameMessage = new JOptionPane(scores, JOptionPane.INFORMATION_MESSAGE);
-                JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over");
+                JDialog dialog = endGameMessage.createDialog(layeredPane, "Game Over: Final Scores");
                 dialog.setVisible(true);
 
                 // exit game
