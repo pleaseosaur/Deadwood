@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class Game {
+public class Deadwood {
     // Fields
     private GameManager manager;
     private JFrame frame;
@@ -26,7 +26,7 @@ public class Game {
 
     // Main method
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Game().GUI());
+        SwingUtilities.invokeLater(() -> new Deadwood().GUI());
     }
 
     // Initialize GUI and start game
