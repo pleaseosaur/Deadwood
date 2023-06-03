@@ -182,11 +182,13 @@ public class Deadwood {
                 .toList();
 
         // create a string to display the scores
-        StringBuilder html = new StringBuilder("<html>");
+        StringBuilder html = new StringBuilder("<html><center>");
+        html.append("<center><h2><u>Standings</u></h2></center>");
+        html.append("<br>");
         for (Map.Entry<String, Integer> entry : sortedScores) {
-            html.append(entry.getKey()).append(": ").append(entry.getValue()).append("<br>");
+            html.append(entry.getKey()).append(": ").append(entry.getValue()).append("<br><br>");
         }
-        html.append("</html>");
+        html.append("</center></html>");
         JLabel scoreLabel = new JLabel(html.toString());
         standingsPanel.add(scoreLabel);
 
