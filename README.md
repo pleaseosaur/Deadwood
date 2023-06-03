@@ -128,3 +128,6 @@ _(This functionality is disabled when the scene has wrapped and the card has bee
 ---
 
 * On smaller monitors, the enlarged card image may extend beyond the bounds of the screen.
+* If custom player names are entered, excessively long names may cause the player stats panel to expand 
+to fit the name, which may cause the stats panel to extend beyond the bounds of the screen. (_Restricting 
+custom player names to a reasonable length will prevent this issue._)
