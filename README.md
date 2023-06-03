@@ -75,9 +75,8 @@ already taken. If a button is disabled, it will be grayed out and unclickable. I
 be colored and clickable.
 
 Clicking the ```Move``` or ```Take Role``` buttons will display a list of available locations or roles from 
-which the player may choose. The player may then select a location or role from the list. If the player does
-not wish to move or take a role, they may simply click anywhere outside the list to cancel the action.
-(_Once a selection has been made, it cannot be undone._)
+which the player may choose. If the player does not wish to move or take a role, they may simply click 
+anywhere outside the list to cancel the action. (_Once a selection has been made, it cannot be undone._)
 
 When ```End Turn``` is the only available action remaining, select it to end the current player's turn. The 
 next player will then be prompted to begin their turn.
