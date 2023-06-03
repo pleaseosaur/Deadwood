@@ -55,13 +55,13 @@ compiling and running via the terminal. If issues persist, please contact the au
 ---
 
 When the game has started, the user will be prompted to select the number of players from a dropdown menu.
-If the user wishes to exit the game without starting, they may simply click the "Cancel" button provided in 
-the game setup prompt. 
+If the user wishes to exit the game without starting, they may simply click the ```Cancel``` button provided 
+in the game setup prompt. 
 
-Once the desired number of players has been selected, clicking the "Start Game" button will begin the game 
+Once the desired number of players has been selected, clicking the ```Start Game``` button will begin the game 
 setup. The user will be given the option to rename the players or keep the default names. This selection 
-is entirely discretionary and may be bypassed by clicking "No" when prompted to rename the players. If "Yes" 
-is selected, the user will be prompted to enter a name for each player. 
+is entirely discretionary and may be bypassed by clicking ```No``` when prompted to rename the players. If 
+```Yes``` is selected, the user will be prompted to enter a name for each player. 
 
 Once player names have either been entered or bypassed, the game will begin and the board will be populated.
 
@@ -74,6 +74,11 @@ Action buttons will be enabled or disabled based on the current player's locatio
 already taken. If a button is disabled, it will be grayed out and unclickable. If a button is enabled, it will
 be colored and clickable.
 
+Clicking the ```Move``` or ```Take Role``` buttons will display a list of available locations or roles from 
+which the player may choose. The player may then select a location or role from the list. If the player does
+not wish to move or take a role, they may simply click anywhere outside the list to cancel the action.
+(_Once a selection has been made, it cannot be undone._)
+
 When ```End Turn``` is the only available action remaining, select it to end the current player's turn. The 
 next player will then be prompted to begin their turn.
 
@@ -85,7 +90,7 @@ the upgrade will not be allowed. If the player has enough money to upgrade, the 
 the player's rank will be updated. The player's dollars or credits will be deducted by the cost of the upgrade.
 
 The game will continue until all rounds (days) have been completed. At the end of the game, the scores will 
-be calculated and displayed. When the "OK" button is clicked, the game will close. 
+be calculated and displayed. When the ```OK``` button is clicked, the game will close. 
 
 ---
 
@@ -93,7 +98,7 @@ be calculated and displayed. When the "OK" button is clicked, the game will clos
 
 ---
 
-* If a player is at the Trailer, their only option is to ```Move```.
+* If a player is at the Trailer, their only option is ```Move```.
 * If a player is at the Casting Office, they may ```Upgrade``` and/or ```Move```.
 * If a player is at a Set location and have not yet taken a role, they may ```Take Role``` if they so choose.
 * If a player is at a Set location and has taken a role:
@@ -106,7 +111,7 @@ be calculated and displayed. When the "OK" button is clicked, the game will clos
 
 ---
 
-If at any time during the game the user wishes to exit and quit, they may do so by simply clicking the "X"
+If at any time during the game the user wishes to exit and quit, they may do so by simply clicking the ```X```
 in the top right corner of the window. A confirmation prompt will appear, allowing the user to confirm or
 cancel their exit.
 
