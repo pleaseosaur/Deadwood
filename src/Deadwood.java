@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class Deadwood {
     // Fields
@@ -22,7 +21,7 @@ public class Deadwood {
     private JPanel panel, buttonPanel, statsPanel,messagePanel, btn_move, btn_role, btn_rehearse, btn_act, btn_upgrade, btn_end, standingsPanel;
     private JLayeredPane layeredPane;
     private JLabel playerName, playerRank, playerDollars, playerCredits, playerChips, daysRemain;
-    private Map<Take, JLabel> takeLabels = new HashMap<>();
+    private final Map<Take, JLabel> takeLabels = new HashMap<>();
 
     // Main method
     public static void main(String[] args) {
@@ -183,12 +182,12 @@ public class Deadwood {
                 .toList();
 
         // create a string to display the scores
-        String html = "<html>";
+        StringBuilder html = new StringBuilder("<html>");
         for (Map.Entry<String, Integer> entry : sortedScores) {
-            html += entry.getKey() + ": " + entry.getValue() + "<br>";
+            html.append(entry.getKey()).append(": ").append(entry.getValue()).append("<br>");
         }
-        html += "</html>";
-        JLabel scoreLabel = new JLabel(html);
+        html.append("</html>");
+        JLabel scoreLabel = new JLabel(html.toString());
         standingsPanel.add(scoreLabel);
 
         return standingsPanel;
@@ -245,7 +244,7 @@ public class Deadwood {
     }
 
 
-    private void selectPlayers() {
+    private void selectPlayers() throws NullPointerException {
         // Player selection dialog
         Integer[] choices = { 2, 3, 4, 5, 6, 7, 8 }; // Number of players choices
         JComboBox<Integer> numPlayers = new JComboBox<>(choices); // Create a combo box for the number of players
@@ -260,8 +259,7 @@ public class Deadwood {
 
         if (option == 0) { // 'Start Game' selected
             Integer input = (Integer) numPlayers.getSelectedItem(); // Get the number of players from the combo box
-            System.out.println("Starting game with " + input + " players!");
-            this.manager = new GameManager(input); // Create a new game manager with the selected number of players
+            this.manager = new GameManager(Objects.requireNonNull(input)); // Create a new game manager with the selected number of players
         } else { // 'Cancel' selected or dialog closed
             int cancel = JOptionPane.showConfirmDialog(frame, "Are you sure you want to cancel?", "Cancel Game Setup", JOptionPane.YES_NO_OPTION);
             if(cancel == JOptionPane.YES_OPTION) {
@@ -561,7 +559,7 @@ public class Deadwood {
             dialog.setLayout(layout);
 
             // Create a button to confirm the upgrade
-            JButton confirmButton = new JButton("Confirm Upgrade");
+            JButton confirmButton = new JButton("Confirm");
             // Create a button to cancel the upgrade
             JButton cancelButton = new JButton("Cancel");
 
@@ -655,7 +653,7 @@ public class Deadwood {
             dialog.setIconImage(getImage("/resources/images/tokens/w6.png").getImage()); // Set the icon of the dialog
             dialog.setTitle("   Casting Office: Pay dollars OR credits to upgrade."); // Set the title of the dialog
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE); // Close the dialog when the user clicks the X
-            dialog.setSize(350, 350); // Set the size of the dialog
+            dialog.setSize(400, 400); // Set the size of the dialog
             dialog.setLocationRelativeTo(layeredPane); // Center the dialog
             dialog.setVisible(true); // Show the dialog
         };
@@ -676,9 +674,9 @@ public class Deadwood {
     //********************************************************************************
     //                               Helper Methods
     //********************************************************************************
-    private ImageIcon getImage(String path) {
+    private ImageIcon getImage(String path) throws NullPointerException {
         URL url = getClass().getResource(path);
-        ImageIcon image = new ImageIcon(url);
+        ImageIcon image = new ImageIcon(Objects.requireNonNull(url));
         image.setImage(image.getImage().getScaledInstance(image.getIconWidth(), image.getIconHeight(), Image.SCALE_DEFAULT));
         return image;
     }
@@ -711,7 +709,7 @@ public class Deadwood {
                 input // Add the text field to the dialog
         };
 
-        String newName = ""; // The new name to be returned
+        String newName; // The new name to be returned
         do {
             JOptionPane optionPane = new JOptionPane(inputs, JOptionPane.PLAIN_MESSAGE, JOptionPane.DEFAULT_OPTION); // Create a new option pane with the inputs
             JDialog prompt = optionPane.createDialog(layeredPane, "Rename Player"); // Create a new dialog with the option pane
