@@ -27,7 +27,7 @@ public class GameManager {
     //********************************************************************************
     //                             Game Setup & State
     //********************************************************************************
-    public void setupGame(int numPlayers) {
+    private void setupGame(int numPlayers) {
         SetupGame setup = new SetupGame(numPlayers);
         this.players = setup.setPlayers(numPlayers);
         setDays(setup.setDays(numPlayers));
@@ -39,7 +39,7 @@ public class GameManager {
     }
 
 
-    public int endDay() {
+    private int endDay() {
         if(dayHasEnded()) {
             decrementDay();
             if(!gameHasEnded()){
@@ -56,7 +56,7 @@ public class GameManager {
     }
 
 
-    public void resetPlayers() {
+    private void resetPlayers() {
         int startingX = 991 + 10;
         int startingY = 248 + 80;
 
@@ -81,7 +81,7 @@ public class GameManager {
 
 
     // resetRoles: resets all off-card roles to be available for next day
-    public void resetRoles() {
+    private void resetRoles() {
         for(Location location : board.getAllLocations().values()) {
             if(location instanceof Set set) {
                 for(Role role : set.getRoles()) {
@@ -92,7 +92,7 @@ public class GameManager {
     }
 
 
-    public void resetTakes() {
+    private void resetTakes() {
         for(Location location : board.getAllLocations().values()) {
             if(location instanceof Set set) {
                 set.resetTakes();
@@ -335,7 +335,7 @@ public class GameManager {
     //********************************************************************************
     //                               Payouts & Wrapping
     //********************************************************************************
-    public int[] wrapScene() {
+    private int[] wrapScene() {
 
         int[] results = new int[3]; // more hacky boolean flags
 
@@ -387,7 +387,7 @@ public class GameManager {
     }
 
 
-    public void actPay(Boolean onCard, int isSuccess){
+    private void actPay(Boolean onCard, int isSuccess){
         if(isSuccess == 1) {
             if(onCard) {
                 currentPlayer.addCredits(2);
@@ -403,7 +403,7 @@ public class GameManager {
 
 
     // wrapBonus: rolls for wrap bonuses if players are on card
-    public void wrapBonus(List<Player> onCardPlayers, List<Player> offCardPlayers) {
+    private void wrapBonus(List<Player> onCardPlayers, List<Player> offCardPlayers) {
         Card card = ((Set) currentPlayer.getLocation()).getScene();
         List<Role> onCardRoles = new ArrayList<>(card.getRoles());
         List<Integer> results = dice.wrapRoll(card.getBudget()); // roll number of dice equal to budget
@@ -634,7 +634,7 @@ public class GameManager {
         return this.days;
     }
 
-    public int getOpenScenes() {
+    private int getOpenScenes() {
         return board.getOpenScenes();
     }
 
@@ -654,26 +654,26 @@ public class GameManager {
     //********************************************************************************
 
     // setCurrentPlayer: sets current player to first player in list
-    public void setCurrentPlayer() {
+    private void setCurrentPlayer() {
         this.currentPlayer = getPlayers().get(0);
     }
 
 
     // setCurrentPlayer: sets current player to given player
-    public void setCurrentPlayer(Player player) {
+    private void setCurrentPlayer(Player player) {
         this.currentPlayer = player;
     }
 
 
-    public void setDays(int n) {
+    private void setDays(int n) {
         this.days = n;
     }
 
-    public void decrementDay() {
+    private void decrementDay() {
         setDays(getDays() - 1);
     }
 
-    public void setOpenScenes(int num) {
+    private void setOpenScenes(int num) {
         board.setOpenScenes(num);
     }
 
@@ -683,7 +683,7 @@ public class GameManager {
     //********************************************************************************
     //                               Boolean Checks
     //********************************************************************************
-    public boolean dayHasEnded() {
+    private boolean dayHasEnded() {
         return board.checkEndDay();
     }
 
