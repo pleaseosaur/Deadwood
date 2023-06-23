@@ -555,7 +555,7 @@ public class Deadwood {
                 StringBuilder scores = new StringBuilder();
 
                 // get winner(s)
-                Iterator<Map.Entry<String, Integer>> iterator = playerScores.entrySet().iterator();
+                Iterator<Map.Entry<String, Integer>> iterator = sortedScores.iterator();
                 Map.Entry<String, Integer> firstEntry = iterator.next();
                 String currWinner = firstEntry.getKey();
                 int currScore = firstEntry.getValue();
